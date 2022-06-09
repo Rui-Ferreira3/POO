@@ -27,8 +27,10 @@ public class VideoPoker {
 			System.out.println("Debug mode!");
 		else if (mode.equals("-s"))
 			System.out.println("Simulation mode!");
-		else
+		else {
 			System.out.println("Invalid mode!");
+			System.exit(0);
+		}
 
 		int credit;
 		try{
