@@ -1,7 +1,7 @@
 Para compilar executar os seguintes comandos no terminal:
 
-javac videopoker/*.java player/*.java deck/*.java card/*.java
-jar cmf manif.txt VideoPoker.jar videopoker/* player/* deck/* card/*
+javac main/*.java videopoker/*.java player/*.java deck/*.java card/*.java
+jar cmf manif.txt VideoPoker.jar main/* videopoker/* player/* deck/* card/*
 
 
 Para correr o programa executar o primeiro comando para modo debug e o segundo comando para modo simulação:
