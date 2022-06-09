@@ -2,13 +2,10 @@ package main;
 
 import player.Player;
 import videopoker.Debug;
-import videopoker.Simulation;
+//import videopoker.Simulation;
 import videopoker.VideoPoker;
 
 public class Main {
-    private static VideoPoker game;
-    private static Player player;
-
     public static void main(String[] args) {
         int credit=0;
 		try{
@@ -19,16 +16,19 @@ public class Main {
             ex.printStackTrace();
         }
 
-        player = new Player(credit);
+        Player player = new Player(credit);
+		VideoPoker game;
 
 		String mode = new String();
 		mode = args[0];
 		if (mode.equals("-d")) {
 			System.out.println("Debug mode!");
 			game = new Debug(player);
+			System.out.println(game.get_comand());
 		}else if (mode.equals("-s")) {
 			System.out.println("Simulation mode!");
-            game = new Simulation(player);
+            game = new VideoPoker(player);
+			System.out.println(game.get_comand());
 		}else {
 			System.out.println("Invalid mode!");
 			System.exit(0);
