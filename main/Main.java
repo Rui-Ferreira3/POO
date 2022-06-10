@@ -1,8 +1,8 @@
 package main;
 
-import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.File;											// Import the File class
+import java.io.FileNotFoundException;							// Import this class to handle errors
+import java.util.Scanner;										// Import the Scanner class to read text files
 
 import videopoker.Debug;
 import videopoker.Deck;
@@ -15,8 +15,6 @@ public class Main {
 		String comand_file = new String();
 		String card_file = new String();
 
-		Deck deck;
-
 		try{
             credit = Integer.parseInt(args[1]);
 			System.out.println("Credit:" + credit);
@@ -25,6 +23,7 @@ public class Main {
             ex.printStackTrace();
         }
 
+		Deck deck = new Deck();
         Player player = new Player(credit);
 		VideoPoker game;
 
@@ -34,7 +33,7 @@ public class Main {
 			System.out.println("Debug mode!");
 			comand_file = args[2];
 			card_file = args[3];
-			// criar deck a partir do card_file
+			deck.create_from_file(card_file);					// criar deck a partir do card_file
 			game = new Debug(deck, player, comand_file);
 			game.play();
 		}else if (mode.equals("-s")) {
@@ -47,7 +46,7 @@ public class Main {
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
 			}
-			// criar deck com 52 cartas  
+			deck.create_deck();									// criar deck com 52 cartas  
             game = new VideoPoker(deck, player, nbdeals);
 			game.play();
 		}else {

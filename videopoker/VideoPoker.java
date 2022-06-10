@@ -94,9 +94,12 @@ public class VideoPoker {
 				bet = 1;
 		}
 
-		this.player.sub_credit(bet);
-		this.last_bet = bet;
-		this.last_command = 'b';
+		if (this.player.sub_credit(bet)) {
+			this.last_bet = bet;
+			this.last_command = 'b';
+		} else {
+			System.out.println("b: insuficient funds");
+		}
 	}
 
 	private void credit() {
