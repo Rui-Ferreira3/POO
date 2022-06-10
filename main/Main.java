@@ -47,7 +47,7 @@ public class Main {
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
 			}
-			// criar deck com 52 cartas
+			// criar deck com 52 cartas  
             game = new VideoPoker(/*deck, */player);
 		}else {
 			System.out.println("Invalid mode!");

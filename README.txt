@@ -32,5 +32,7 @@ git pull
 /*FAZER SEMPRE PULL ANES DE EDITAR ALGUMA COISA PARA FAZER DOWNLOAD DA VERSÂO MAIS RECENTE*/
 /*editar código*/
 git add *                       // adiciona todas as mudanças
+git add videopoker              // adiciona todas as mudanças na pasta videopoker
+git add -u                      // faz update dos ficheros removidos
 git commit -m "MENSAGEM"        // MENSAGEM tem de fazer uma descrição muito reduzida do que foi editado
 git push
