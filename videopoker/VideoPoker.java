@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VideoPoker {
 	private int played;
@@ -13,6 +14,8 @@ public class VideoPoker {
 	private int last_bet;
 	private char last_command;
 	private Deck played_cards;
+
+	private HashMap<String, Integer> statistics;
 
 	private Deck deck;
 	private Player player;
@@ -30,6 +33,8 @@ public class VideoPoker {
 		this.wins = 0;
 		this.last_bet = 5;
 		this.played_cards = new Deck();
+
+		this.set_statistics();
 
 		this.variation = new DoubleBonus();
 	}
@@ -160,7 +165,25 @@ public class VideoPoker {
 	}
 
 	private void statistics() {
+		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
+			String key = map.getKey();
+			Integer value = map.getValue();
+			System.out.println(key + ":\t" + value);
+		}
+	}
 
+	private void set_statistics() {
+		this.statistics.put("JOB", 0);
+		this.statistics.put("TP", 0);
+		this.statistics.put("ToaK", 0);
+		this.statistics.put("S", 0);
+		this.statistics.put("F", 0);
+		this.statistics.put("FH", 0);
+		this.statistics.put("FoaK", 0);
+		this.statistics.put("SF", 0);
+		this.statistics.put("RF", 0);
+		this.statistics.put("other", 0);
+		this.statistics.put("total", 0);
 	}
 
 	private void reset_hand() {
