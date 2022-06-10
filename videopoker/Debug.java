@@ -10,8 +10,8 @@ public class Debug extends VideoPoker {
     private List<String> comand_List;
     private int comand_idx;
 
-    public Debug(/*Deck deck, */Player player, String comand_file) {
-        super(/*deck, */player, -1);
+    public Debug(Deck deck, Player player, String comand_file) {
+        super(deck, player, -1);
 
         this.comand_idx = 0;
 
@@ -42,4 +42,10 @@ public class Debug extends VideoPoker {
     private String get_command() {
         return this.comand_List.get(this.comand_idx++);
     }
+
+    private void reset_deck() {
+		for (Card card: this.played_cards.cards) {
+			this.played_cards.remove_card();									// removes card from played card list
+		}
+	}
 }
