@@ -1,22 +1,18 @@
 package videopoker;
 
-import player.Player;
 import deck.Deck;
+import player.Player;
 
 public class VideoPoker {
-	public String[] comands = new String[] {"bet", "credit", "deal", "hold", "advice", "statistics"};
 	private int wins;
 	private Deck deck;
+	private Player player;
+	private String[] comands = new String[] {"b", "$", "d", "h", "a", "s"};
 
-	public VideoPoker(Player player) {
+	public VideoPoker(/*Deck deck, */Player player) {
 		super();
+		//this.deck = deck;
+		this.player = player;
 		this.wins = 0;
 	}
-    public String get_comand() {
-        String comand = new String();
-
-        comand = this.comands[1];
-
-        return comand;
-    }
 }
