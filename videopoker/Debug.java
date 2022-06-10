@@ -6,9 +6,6 @@ import java.util.Scanner; // Import the Scanner class to read text files
 import java.util.ArrayList;
 import java.util.List;
 
-import deck.Deck;
-import player.Player;
-
 public class Debug extends VideoPoker {
     private List<String> comand_List;
 

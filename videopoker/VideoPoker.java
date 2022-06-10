@@ -1,8 +1,5 @@
 package videopoker;
 
-import deck.Deck;
-import player.Player;
-
 public class VideoPoker {
 	private int wins;
 	private Deck deck;
