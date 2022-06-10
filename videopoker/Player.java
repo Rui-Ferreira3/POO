@@ -6,4 +6,7 @@ public class Player {
         this.credit = credit;
     }
     
+    public int get_credit() {
+        return this.credit;
+    }
 }

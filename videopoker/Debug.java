@@ -8,9 +8,12 @@ import java.util.List;
 
 public class Debug extends VideoPoker {
     private List<String> comand_List;
+    private int comand_idx;
 
     public Debug(/*Deck deck, */Player player, String comand_file) {
-        super(/*deck, */player);
+        super(/*deck, */player, -1);
+
+        this.comand_idx = 0;
 
         comand_List = new ArrayList<String>();
         String comand = new String();
@@ -32,7 +35,11 @@ public class Debug extends VideoPoker {
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
-            
         }
+        this.comand_List.add("e");
+    }
+
+    private String get_command() {
+        return this.comand_List.get(this.comand_idx++);
     }
 }

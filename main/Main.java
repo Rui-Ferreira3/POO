@@ -36,7 +36,7 @@ public class Main {
 			card_file = args[3];
 			// criar deck a partir do card_file
 			game = new Debug(/*deck, */player, comand_file);
-			
+			game.play();
 		}else if (mode.equals("-s")) {
 			System.out.println("Simulation mode!");
 			try{
@@ -48,12 +48,11 @@ public class Main {
 				ex.printStackTrace();
 			}
 			// criar deck com 52 cartas  
-            game = new VideoPoker(/*deck, */player);
+            game = new VideoPoker(/*deck, */player, nbdeals);
+			game.play();
 		}else {
 			System.out.println("Invalid mode!");
 			System.exit(0);
 		}
-
-
     }
 }
