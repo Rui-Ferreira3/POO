@@ -67,7 +67,7 @@ public class VideoPoker {
 		} while (!(command.equals("e")));
 	}
 
-	private String get_command() {
+	protected String get_command() {
 		String command = new String();
 		System.out.println("What's next command?");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -146,29 +146,28 @@ public class VideoPoker {
 
 		System.out.println("New hand: " + this.player.hand_to_String());
 
-		boolean win = this.variation.check_win();
-		if (win) {
+		String win = this.check_win(this.player.get_hand());
+		if (win.equals("other")) {
+			System.out.println("player loses and his credit is " + this.player.get_credit());
+		} else {
 			System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
 			this.wins++;
-		} else {
-			System.out.println("player loses and his credit is " + this.player.get_credit());
 		}
 
 		this.played++;
-		this.variation.update_statistics();
+		this.update_statistics(win);
 		this.reset_hand();
 		this.reset_deck();
 	}
 
 	private void advice() {
-
+		String action = this.variation.get_optimal(this.player.get_hand());
+		System.out.println(action);
 	}
 
 	private void statistics() {
 		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
-			String key = map.getKey();
-			Integer value = map.getValue();
-			System.out.println(key + ":\t" + value);
+			System.out.println(map.getKey() + ":\t" + map.getValue(););
 		}
 	}
 
@@ -186,6 +185,14 @@ public class VideoPoker {
 		this.statistics.put("total", 0);
 	}
 
+	private void update_statistics(String win) {
+		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
+			if (win.equals(map.getKey())) {
+				map.setValue(map.getValue()+1);
+			}
+		}
+	}
+
 	private void reset_hand() {
 		for (int i=0; i<5; i++) {
 			Card card = this.player.remove_card(i);								// removes card from player hand
@@ -200,4 +207,103 @@ public class VideoPoker {
 		}
 		this.deck.shuffle();
 	}
+
+	protected String check_win(Deck hand) {
+		if (check_JOB(hand))
+			return "JOB";
+		else if (check_TP(hand))
+			return "TP";
+		else if (check_ToaK(hand))
+			return "ToaK";
+		else if (check_S(hand))
+			return "S";
+		else if (check_F(hand))
+			return "F";
+		else if (check_FoaK(hand))
+			return "FoaK";
+		else if (check_SF(hand))
+			return "SF";
+		else if (check_RF(hand))
+			return "RF";
+		else
+			return "other";
+	}
+
+	private boolean check_JOB(Deck hand) {
+		return false;
+	}
+
+	private boolean check_TP(Deck hand) {
+		return false;
+	}
+
+	private boolean check_ToaK(Deck hand) {
+		return false;
+	}
+
+	private boolean check_S(Deck hand) {
+		return false;
+	}
+
+	private boolean check_F(Deck hand) {
+		return false;
+	}
+
+	private boolean check_FoaK(Deck hand) {
+		return false;
+	}
+
+	private boolean check_SF(Deck hand) {
+		ArrayList<Card> cards = hand.get_cards();
+		String suit = cards.get(0).get_suit();
+		int first = cards.get(0).get_rank();
+		int last = first;
+		int score = 0;
+
+		for (Card card: cards) {
+			if (!suit.equals(card.get_suit())) {
+				return false;
+			}
+			if (first-1 == card.get_rank()) {
+				score++;
+				first = card.get_rank();
+			}else if (last+1 == card.get_rank()) {
+				score++;
+				last = card.get_rank();
+			}
+		}
+
+		if (score == 5)
+			return true;
+		else
+			return false;
+	}
+
+	private boolean check_RF(Deck hand) {
+		ArrayList<Card> cards = hand.get_cards();
+		String suit = cards.get(0).get_suit();
+		int score = 0;
+
+		for (Card card: cards) {
+			if (!suit.equals(card.get_suit())) {
+				return false;
+			}
+			if (card.get_rank() == 10)
+				score ++;
+			if (card.get_rank() == 11)
+				score ++;
+			if (card.get_rank() == 12)
+				score ++;
+			if (card.get_rank() == 13)
+				score ++;
+			if (card.get_rank() == 14)
+				score ++;
+		}
+
+		if (score == 5)
+			return true;
+		else
+			return false;
+	}
+
 }

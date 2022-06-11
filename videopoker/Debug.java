@@ -39,7 +39,7 @@ public class Debug extends VideoPoker {
         this.comand_List.add("e");
     }
 
-    private String get_command() {
+    protected String get_command() {
         return this.comand_List.get(this.comand_idx++);
     }
 
