@@ -8,7 +8,11 @@ public class Card {
         this.suit=suit;
     }
 
-    protected String get_rank(Card card){
+    protected String get_rank(){
         return this.rank;
+    }
+
+    protected String get_suit(){
+        return this.suit;
     }
 }

@@ -10,7 +10,6 @@ import java.util.Map;
 public class Player {
     private int credit;
     private Deck hand;
-    private Card card;
     public Player(int credit) {
         this.credit = credit;
         this.hand = new Deck();
@@ -29,8 +28,8 @@ public class Player {
     protected void add_card(Card card){
         this.hand.add_card(card);
     }
-    protected void remove_card(Card card){
-        this.hand.remove_card(card);
+    protected void remove_card(int i){
+        this.hand.remove_card(i);
     }
     public int get_credit() {
         return this.credit;
@@ -39,7 +38,7 @@ public class Player {
         String hand_String;
         //perceber como é que o rui faz a hash table para fazer o ciclo for a percorrer a mao e sacar as cartas a cada ciclo
         for(Map.Entry<String, Integer> map:this.hand){
-			String card = map.getValue();
+			Card card = map.getValue();
 			hand_String+=card.get_rank()+card.get_suit()+" ";
         }
         return hand_String;
