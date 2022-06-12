@@ -1,7 +1,7 @@
 package videopoker;
 
-import java.io.File;                                            // Import the File class
-import java.io.FileNotFoundException;                           // Import this class to handle errors
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,30 +10,16 @@ import java.util.Collections;
 public class Deck {
     private ArrayList<Card> deck;
 
-
-    /**
-	 * Constructor do Deck. Cria lista vazia
-	 */
     public Deck(){
         this.deck= new ArrayList<Card>();
     }
 
-
-    /**
-	 * Repoe uma carta no final do baralho 
-	 * @param card carta a ser reposta no baralho 
-	 */
 	void add_card(Card card) {
 		this.deck.add(card);
 	}
 
-
-    /**
-	 * Tira uma carta do topo do deck
-	 * @param card carta do topo do deck
-	 */
 	Card remove_card(int index) {
-        Card carta= deck.remove(index);
+        Card carta = deck.remove(index);
         return carta;
 	}
 
@@ -43,36 +29,25 @@ public class Deck {
         return removed_card;
     }
 
-
     ArrayList<Card> get_cards() {
         return this.deck;
     }
 
-
-    /**
-	 * Da shuffle ao deck
-	 */
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 
-    /**
-	 * Cria um deck com 52 cartas 
-	 */
-    public void create_deck(){
 
-        for (int suit = 0; suit < 4; suit++) {
-            for (int rank = 0; rank < 13; rank++) {
+    public void create_deck() {
+        for (int suit = 0; suit < 4; suit++)
+            for (int rank = 0; rank < 13; rank++)
                 deck.add(new Card(rank, suit));
-            }
-        }
     }
 
-    Deck order_deck(Deck deck){
-        Collections.sort(deck.deck, (d1, d2) -> {
+    void order_deck(){
+        Collections.sort(this.deck, (d1, d2) -> {
             return d2.get_rank() - d1.get_rank();
         });
-         return deck;
     }
 
     public void create_from_file(String card_file) {

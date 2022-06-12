@@ -44,8 +44,9 @@ public class Debug extends VideoPoker {
     }
 
     void reset_deck() {
-		for (Card card: this.played_cards.get_cards()) {
-			this.played_cards.remove_card(0);									// removes card from played card list
-		}
+		int num = this.played_cards.get_cards().size();
+		for (int i=0; i<num; i++) {
+			this.played_cards.remove_card(0);
+        }
 	}
 }

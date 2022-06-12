@@ -48,13 +48,13 @@ public class VideoPoker {
 
 			char c = command.charAt(0);
 			if (c == 'b')
-				this.bet(command);
+				this.bet(command.split(" "));
 			else if (c == '$')
 				this.credit();
 			else if (c == 'd')
 				this.deal();
 			else if (c == 'h')
-				this.hold(command);
+				this.hold(command.split(" "));
 			else if (c == 'a')
 				this.advice();
 			else if (c == 's')
@@ -67,11 +67,14 @@ public class VideoPoker {
 			}
 
 			if (c == 'h' && this.last_command == 'd') {
-				String win = this.check_win(this.player.get_hand());
+				Deck ordered_hand = this.player.get_hand();
+				ordered_hand.order_deck();
+				String win = this.check_win(ordered_hand);
 				if (win.equals("other")) {
 					System.out.println("player loses and his credit is " + this.player.get_credit());
 				} else {
 					System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
+					System.out.println(win);
 					this.wins++;
 				}
 
@@ -103,16 +106,16 @@ public class VideoPoker {
 		return command;
 	}
 
-	void bet(String command) {
+	void bet(String[] command) {
 		if (this.last_command == 'b' || this.last_command == 'd') {
 			System.out.println("b: illegal command");
 			return;
 		}
 
 		int bet = this.last_bet;
-		if (command.length()>1) {
+		if (command.length>1) {
 			try{
-				bet = Integer.parseInt(String.valueOf(command.charAt(2)));
+				bet = Integer.parseInt(String.valueOf(command[1]));
 			}
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
@@ -134,7 +137,6 @@ public class VideoPoker {
 
 	void credit() {
 		System.out.println("Available credits: " + this.player.get_credit());
-		this.last_command = '$';
 	}
 
 	void deal() {
@@ -147,24 +149,24 @@ public class VideoPoker {
 			Card card = this.deck.remove_card(0);
 			this.player.add_card(card);
 		}
-		System.out.println("Hand:" + this.player.hand_to_String());
+		System.out.println("hand:" + this.player.hand_to_String());
 		this.last_command = 'd';
 	}
 
-	void hold(String command) {
-		if (this.last_command != 'd') {
+	void hold(String[] command) {
+		if (!(this.last_command == 'd' || this.last_command == 'a')) {
 			System.out.println("h: illegal command");
 			return;
 		}
 
 		int index = 0;
-		int command_idx = 2;
+		int command_idx = 1;
 		for (int i=0; i<5; i++) {
 			if (i == index) {
 				try{
-					if (command_idx <= command.length()){
-						index = Integer.parseInt(String.valueOf(command.charAt(command_idx)));		// recebe indice da carta a remover
-						command_idx += 2;
+					if (command_idx < command.length){
+						index = Integer.parseInt(String.valueOf(command[command_idx]));		// recebe indice da carta a remover
+						command_idx ++;
 					} else
 						index = 6;
 				}
@@ -179,10 +181,14 @@ public class VideoPoker {
 			}
 		}
 
-		System.out.println("New hand: " + this.player.hand_to_String());
+		System.out.println("new hand: " + this.player.hand_to_String());
 	}
 
 	void advice() {
+		if (this.last_command != 'd') {
+			System.out.println("a: illegal command");
+			return;
+		}
 		String action = this.variation.get_optimal(this.player.get_hand());
 		System.out.println(action);
 		this.last_command = 'a';
@@ -225,8 +231,7 @@ public class VideoPoker {
 	}
 
 	void reset_deck() {
-		ArrayList<Card> cards = this.played_cards.get_cards();
-		int num = cards.size();
+		int num = this.played_cards.get_cards().size();
 		for (int i=0; i<num; i++) {
 			Card card = this.played_cards.remove_card(0);				// removes card from played card list
 			this.deck.add_card(card);											// adds card back to deck
@@ -235,22 +240,22 @@ public class VideoPoker {
 	}
 
 	String check_win(Deck hand) {
-		if (check_JOB(hand))
-			return "JOB";
-		else if (check_TP(hand))
-			return "TP";
-		else if (check_ToaK(hand))
-			return "ToaK";
+		if (check_S(hand) && check_F(hand) &&  hand.get_cards().get(4).get_rank() == 13 && hand.get_cards().get(0).get_rank() == 1)
+			return "RF";
+		else if (check_S(hand) && check_F(hand))
+			return "SF";
+		else if (check_FoaK(hand))
+			return "FoaK";
 		else if (check_S(hand))
 			return "S";
 		else if (check_F(hand))
 			return "F";
-		else if (check_FoaK(hand))
-			return "FoaK";
-		else if (check_SF(hand))
-			return "SF";
-		else if (check_RF(hand))
-			return "RF";
+		else if (check_ToaK(hand))
+			return "ToaK";
+		else if (3 == 1)
+			return "TP";
+		else if (2 == 1)
+			return "JOB";
 		else
 			return "other";
 	}
@@ -268,68 +273,40 @@ public class VideoPoker {
 	}
 
 	boolean check_S(Deck hand) {
-		return false;
+		ArrayList<Card> cards = hand.get_cards();
+		int low_rank = cards.get(4).get_rank();
+
+		if (low_rank == 1)
+			if (cards.get(3).get_rank() == 10 && cards.get(2).get_rank() == 11 && cards.get(1).get_rank() == 12 && cards.get(0).get_rank() == 13) 
+				return true;
+
+		for (int i=3; i>=0; i--) {
+			if (cards.get(i).get_rank() == low_rank-1)	
+				low_rank++;
+			else
+				return false;
+		}
+
+		return true;
 	}
 
 	boolean check_F(Deck hand) {
-		return false;
+		ArrayList<Card> cards = hand.get_cards();
+		Character suit = cards.get(0).get_suit();
+
+		for (Card card: cards) {
+			if (!suit.equals(card.get_suit())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	boolean check_FoaK(Deck hand) {
+		ArrayList<Card> cards = hand.get_cards();
+
+		
 		return false;
-	}
-
-	boolean check_SF(Deck hand) {
-		ArrayList<Card> cards = hand.get_cards();
-		Character suit = cards.get(0).get_suit();
-		int first = cards.get(0).get_rank();
-		int last = first;
-		int score = 0;
-
-		for (Card card: cards) {
-			if (!suit.equals(card.get_suit())) {
-				return false;
-			}
-			if (first-1 == card.get_rank()) {
-				score++;
-				first = card.get_rank();
-			}else if (last+1 == card.get_rank()) {
-				score++;
-				last = card.get_rank();
-			}
-		}
-
-		if (score == 5)
-			return true;
-		else
-			return false;
-	}
-
-	boolean check_RF(Deck hand) {
-		ArrayList<Card> cards = hand.get_cards();
-		Character suit = cards.get(0).get_suit();
-		int score = 0;
-
-		for (Card card: cards) {
-			if (!suit.equals(card.get_suit())) {
-				return false;
-			}
-			if (card.get_rank() == 10)
-				score ++;
-			if (card.get_rank() == 11)
-				score ++;
-			if (card.get_rank() == 12)
-				score ++;
-			if (card.get_rank() == 13)
-				score ++;
-			if (card.get_rank() == 1)
-				score ++;
-		}
-
-		if (score == 5)
-			return true;
-		else
-			return false;
 	}
 
 }

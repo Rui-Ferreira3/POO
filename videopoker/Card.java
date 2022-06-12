@@ -7,15 +7,12 @@ public class Card {
 
 	private int rank;
 	private int suit;
-	
-	
-	//Constructor
+
 	public Card(int rank, int suit) {
 		this.rank = rank;
 		this.suit = suit;
 	}
 
-	//Getters
 	Integer get_rank() {
 		return ranks[rank];
 	}
