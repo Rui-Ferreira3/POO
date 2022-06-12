@@ -14,7 +14,7 @@ public class VideoPoker {
 	private int last_bet;
 	private char last_command;
 	private Deck played_cards;
-
+	
 	private HashMap<String, Integer> statistics;
 
 	private Deck deck;

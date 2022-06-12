@@ -46,7 +46,7 @@ public class Main {
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
 			}
-			deck.create_deck();									// criar deck com 52 cartas  
+			deck.create_deck();									// criar deck com 52 cartas
             game = new VideoPoker(deck, player, nbdeals);
 			game.play();
 		}else {
