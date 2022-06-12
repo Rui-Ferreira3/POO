@@ -37,10 +37,12 @@ public class Player {
     protected String hand_to_String(){
         String hand_String;
         //perceber como é que o rui faz a hash table para fazer o ciclo for a percorrer a mao e sacar as cartas a cada ciclo
-        for(Map.Entry<String, Integer> map:this.hand){
-			Card card = map.getValue();
+        for(Card card:this.hand.get_deck()){
 			hand_String+=card.get_rank()+card.get_suit()+" ";
         }
         return hand_String;
+    }
+    protected Deck get_Hand(){
+        return hand;
     }
 }
