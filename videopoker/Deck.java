@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class Deck {
+
 
     private ArrayList<Card> deck;
 
@@ -48,7 +50,7 @@ public class Deck {
     /**
 	 * Cria um deck com 52 cartas 
 	 */
-    public create_deck(){
+    public void create_deck(){
 
         for (int suit = 0; suit <= 3; suit++) {
             for (int rank = 2; rank <= 13; rank++) {
@@ -58,51 +60,52 @@ public class Deck {
     }
 
 
-    public create_from_file(){
+    public void create_from_file() throws FileNotFoundException{
 
         File file= new File("/Users/ricar/eclipse-workspace/Projeto/card-file.txt");
-        Scanner scan= new Scanner(file);
+        try (Scanner scan = new Scanner(file)) {
+            int rank=1;
+            char suit='C';
 
-        int rank, suit;
+            String aux= scan.nextLine();
+            String[] cartas = aux.split(" ");
 
-        String aux= scan.nextLine();
-        String[] cartas = aux.split(" ");
+            for(int i=0; i< cartas.length; i++){
 
-        for(int i=0; i< cartas.length; i++){
+                aux= cartas[i];
 
-            aux= cartas[i];
+                if(aux.length() == 2){
 
-            if(aux.length() == 2){
-
-                for(int j=0; j < 15; j++){
-                    if(aux.charAt(0) == Ranks[j]){
-                        rank= j;
-                        break;
+                    for(int j=0; j < 15; j++){
+                        if(Character.getNumericValue(aux.charAt(0)) == Ranks[j]){
+                            rank= Ranks[j];
+                            break;
+                        }
                     }
+
+                    for(int a=0; a < 4; a++){
+                        if(aux.charAt(1) == Suits[a]){
+                            suit= Suits[a];
+                            break;
+                        }
+                    }
+
+                    deck.add(new Card(rank, suit));
+                }
+                else{
+                    rank= 10;
+
+                    for(int a=0; a < 4; a++){
+                        if(aux.charAt(1) == Suits[a]){
+                            suit= Suits[a];
+                            break;
+                        }
+                    }
+
+                    deck.add(new Card(rank, suit));
                 }
 
-                for(int a=0; a < 4; a++){
-                    if(aux.charAt(1) == Suits[a]){
-                        suit= a;
-                        break;
-                    }
-                }
-
-                deck.add(new Card(rank, suit));
             }
-            else{
-                rank= 10;
-
-                for(int a=0; a < 4; a++){
-                    if(aux.charAt(1) == Suits[a]){
-                        suit= a;
-                        break;
-                    }
-                }
-
-                deck.add(new Card(rank, suit));
-            }
-
         }
 
 
