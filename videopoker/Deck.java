@@ -59,9 +59,10 @@ public class Deck {
     }
 
 
-    public void create_from_file() throws FileNotFoundException{
+    public void create_from_file(String card_file) throws FileNotFoundException{
 
-        File file= new File("/Users/ricar/eclipse-workspace/Projeto/card-file.txt");
+        //File file= new File("/Users/ricar/eclipse-workspace/Projeto/card-file.txt");
+        File file = new File(card_file);
         try (Scanner scan = new Scanner(file)) {
             int rank=1, suit=1;
 
