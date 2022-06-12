@@ -58,6 +58,21 @@ public class VideoPoker {
 					System.exit(0);
 			}
 
+			if (command.charAt(0) == 'h') {
+				String win = this.check_win(this.player.get_hand());
+				if (win.equals("other")) {
+					System.out.println("player loses and his credit is " + this.player.get_credit());
+				} else {
+					System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
+					this.wins++;
+				}
+
+				this.played++;
+				this.update_statistics(win);
+				this.reset_hand();
+				this.reset_deck();
+			}
+
 			if (this.num_rounds != -1) {
 				if (this.played > this.num_rounds) {
 					break;
@@ -67,7 +82,7 @@ public class VideoPoker {
 		} while (!(command.equals("e")));
 	}
 
-	protected String get_command() {
+	private String get_command() {
 		String command = new String();
 		System.out.println("What's next command?");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -145,19 +160,6 @@ public class VideoPoker {
 		}
 
 		System.out.println("New hand: " + this.player.hand_to_String());
-
-		String win = this.check_win(this.player.get_hand());
-		if (win.equals("other")) {
-			System.out.println("player loses and his credit is " + this.player.get_credit());
-		} else {
-			System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
-			this.wins++;
-		}
-
-		this.played++;
-		this.update_statistics(win);
-		this.reset_hand();
-		this.reset_deck();
 	}
 
 	private void advice() {
