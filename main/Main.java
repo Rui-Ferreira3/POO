@@ -17,10 +17,10 @@ public class Main {
 
 		try{
             credit = Integer.parseInt(args[1]);
-			System.out.println("Credit:" + credit);
         }
         catch (NumberFormatException ex){
             ex.printStackTrace();
+			System.exit(0);
         }
 
 		Deck deck = new Deck();
@@ -41,12 +41,12 @@ public class Main {
 			try{
 				bet = Integer.parseInt(args[2]);
 				nbdeals = Integer.parseInt(args[3]);
-				System.out.println("Credit:" + credit);
 			}
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
 			}
 			deck.create_deck();									// criar deck com 52 cartas
+			deck.shuffle();
             game = new VideoPoker(deck, player, nbdeals);
 			game.play();
 		}else {

@@ -33,7 +33,7 @@ public class Debug extends VideoPoker {
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            System.out.println("an error occurred reading commands file");
             e.printStackTrace();
         }
         this.comand_List.add("e");
@@ -44,8 +44,8 @@ public class Debug extends VideoPoker {
     }
 
     void reset_deck() {
-		for (Card card: this.played_cards.cards) {
-			this.played_cards.remove_card();									// removes card from played card list
+		for (Card card: this.played_cards.get_cards()) {
+			this.played_cards.remove_card(0);									// removes card from played card list
 		}
 	}
 }

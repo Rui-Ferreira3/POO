@@ -1,13 +1,13 @@
 package videopoker;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.File;                                            // Import the File class
+import java.io.FileNotFoundException;                           // Import this class to handle errors
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 public class Deck {
-
     private ArrayList<Card> deck;
 
 
@@ -23,8 +23,8 @@ public class Deck {
 	 * Repoe uma carta no final do baralho 
 	 * @param card carta a ser reposta no baralho 
 	 */
-	public void add_card(Card card) {
-		deck.add(card);
+	void add_card(Card card) {
+		this.deck.add(card);
 	}
 
 
@@ -32,11 +32,21 @@ public class Deck {
 	 * Tira uma carta do topo do deck
 	 * @param card carta do topo do deck
 	 */
-	public Card remove_card(Card card) {
-
-        Card carta= deck.remove(0);
+	Card remove_card(int index) {
+        Card carta= deck.remove(index);
         return carta;
 	}
+
+    Card put_card(int i, Card card) {
+        Card removed_card = this.deck.get(i);
+        this.deck.set(i, card);
+        return removed_card;
+    }
+
+
+    ArrayList<Card> get_cards() {
+        return this.deck;
+    }
 
 
     /**
@@ -51,66 +61,59 @@ public class Deck {
 	 */
     public void create_deck(){
 
-        for (int suit = 0; suit <= 3; suit++) {
-            for (int rank = 0; rank < 14; rank++) {
+        for (int suit = 0; suit < 4; suit++) {
+            for (int rank = 0; rank < 13; rank++) {
                 deck.add(new Card(rank, suit));
             }
         }
     }
 
+    Deck order_deck(Deck deck){
+        Collections.sort(deck.deck, (d1, d2) -> {
+            return d2.get_rank() - d1.get_rank();
+        });
+         return deck;
+    }
 
-    public void create_from_file(String card_file) throws FileNotFoundException{
+    public void create_from_file(String card_file) {
+        try {
+            File file = new File(card_file);
+            Scanner scan = new Scanner(file);
 
-        //File file= new File("/Users/ricar/eclipse-workspace/Projeto/card-file.txt");
-        File file = new File(card_file);
-        try (Scanner scan = new Scanner(file)) {
-            int rank=1, suit=1;
+            int rank = 1, suit = 1;
 
-            String aux= scan.nextLine();
-            String[] cartas = aux.split(" ");
+            String[] cartas = scan.nextLine().split(" ");
 
-            for(int i=0; i< cartas.length; i++){
-
-                aux= cartas[i];
-
-                if(aux.length() == 2){
-
-                    for(int j=0; j < 9; j++){
-                        if(Character.getNumericValue(aux.charAt(0)) == Ranks[j]){
+            for (String carta: cartas){
+                if (carta.length() == 2) {
+                    for (int j=1; j<9; j++) {
+                        if (Character.getNumericValue(carta.charAt(0)) == Card.ranks[j])
                             rank= j;
-                            break;
-                        }
                     }
 
-                    switch(aux.charAt(0)){
-                        case 'J' : rank= 10;
-                        case 'Q' : rank= 11;
-                        case 'K' : rank= 12;
-                        case 'A' : rank= 0;
-                    }
+                    if (carta.charAt(0) == 'T')
+                        rank = 9;
+                    else if (carta.charAt(0) == 'J')
+                        rank = 10;
+                    else if (carta.charAt(0) == 'Q')
+                        rank = 11;
+                    else if (carta.charAt(0) == 'K')
+                        rank = 12;
+                    else if (carta.charAt(0) == 'A')
+                        rank = 0;
 
-                    for(int a=0; a < 4; a++){
-                        if(aux.charAt(1) == Suits[a]){
-                            suit= a;
-                            break;
-                        }
-                    }
-
-                    deck.add(new Card(rank, suit));
-                }
-                else{
-                    suit=9;
-
-                    for(int a=0; a < 4; a++){
-                        if(aux.charAt(1) == Suits[a]){
-                            suit= a;
-                            break;
-                        }
+                    for (int a=0; a<4; a++) {
+                        if (carta.charAt(1) == Card.suits[a])
+                            suit = a;
                     }
 
                     deck.add(new Card(rank, suit));
                 }
             }
+            scan.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("an error occurred readinng cards file");
+            e.printStackTrace();
         }
     }
 }

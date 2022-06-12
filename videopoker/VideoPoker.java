@@ -33,6 +33,7 @@ public class VideoPoker {
 		this.wins = 0;
 		this.last_bet = 5;
 		this.played_cards = new Deck();
+		this.statistics = new HashMap<String, Integer>();
 
 		this.set_statistics();
 
@@ -45,20 +46,27 @@ public class VideoPoker {
 			command = this.get_command();
 			System.out.println("Command: " + command);
 
-			switch (command.charAt(0)) {
-				case 'b': this.bet(command);
-				case '$': this.credit();
-				case 'd': this.deal();
-				case 'h': this.hold(command);
-				case 'a': this.advice();
-				case 's': this.statistics();
-				case 'e': break;
-				default: 
-					System.out.println("Invalid command! Try again!");
+			char c = command.charAt(0);
+			if (c == 'b')
+				this.bet(command);
+			else if (c == '$')
+				this.credit();
+			else if (c == 'd')
+				this.deal();
+			else if (c == 'h')
+				this.hold(command);
+			else if (c == 'a')
+				this.advice();
+			else if (c == 's')
+				this.statistics();
+			else if (c == 'e')
+				break;
+			else {
+				System.out.println("Invalid command! Try again!");
 					System.exit(0);
 			}
 
-			if (command.charAt(0) == 'h') {
+			if (c == 'h' && this.last_command == 'd') {
 				String win = this.check_win(this.player.get_hand());
 				if (win.equals("other")) {
 					System.out.println("player loses and his credit is " + this.player.get_credit());
@@ -71,6 +79,7 @@ public class VideoPoker {
 				this.update_statistics(win);
 				this.reset_hand();
 				this.reset_deck();
+				this.last_command = 'h';
 			}
 
 			if (this.num_rounds != -1) {
@@ -107,6 +116,7 @@ public class VideoPoker {
 			}
 			catch (NumberFormatException ex){
 				ex.printStackTrace();
+				return;
 			}
 			if (bet > 5)
 				bet = 5;
@@ -124,6 +134,7 @@ public class VideoPoker {
 
 	void credit() {
 		System.out.println("Available credits: " + this.player.get_credit());
+		this.last_command = '$';
 	}
 
 	void deal() {
@@ -133,30 +144,39 @@ public class VideoPoker {
 		}
 		
 		for (int i=0; i<5; i++) {
-			Card card = this.deck.remove_card();
+			Card card = this.deck.remove_card(0);
 			this.player.add_card(card);
 		}
+		System.out.println("Hand:" + this.player.hand_to_String());
+		this.last_command = 'd';
 	}
 
 	void hold(String command) {
 		if (this.last_command != 'd') {
-			System.out.println("d: illegal command");
+			System.out.println("h: illegal command");
 			return;
 		}
 
-		int index;
-
-		for (int i=2; i<command.length(); i+=2) {
-			try{
-				index = Integer.parseInt(String.valueOf(command.charAt(i)));		// recebe indice da carta a remover
+		int index = 0;
+		int command_idx = 2;
+		for (int i=0; i<5; i++) {
+			if (i == index) {
+				try{
+					if (command_idx <= command.length()){
+						index = Integer.parseInt(String.valueOf(command.charAt(command_idx)));		// recebe indice da carta a remover
+						command_idx += 2;
+					} else
+						index = 6;
+				}
+				catch (NumberFormatException ex){
+					ex.printStackTrace();
+				}
 			}
-			catch (NumberFormatException ex){
-				ex.printStackTrace();
+			if (i != index-1) {
+				Card card = this.deck.remove_card(0);
+				Card removed_card = this.player.replace_card(i, card);
+				this.played_cards.add_card(removed_card);
 			}
-			Card removed_card = this.player.remove_card(index);					// remove carta da mão do jogador
-			this.played_cards.add_card(removed_card);							// adiciona carta às cartas jogadas
-			Card card = this.deck.remove_card();								// recebe carta nova do deck
-			this.player.add_card(card);											// adiciona carta nova à mão do jogador
 		}
 
 		System.out.println("New hand: " + this.player.hand_to_String());
@@ -165,12 +185,14 @@ public class VideoPoker {
 	void advice() {
 		String action = this.variation.get_optimal(this.player.get_hand());
 		System.out.println(action);
+		this.last_command = 'a';
 	}
 
 	void statistics() {
 		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
-			System.out.println(map.getKey() + ":\t" + map.getValue(););
+			System.out.println(map.getKey() + ":\t" + map.getValue());
 		}
+		this.last_command = 's';
 	}
 
 	void set_statistics() {
@@ -197,15 +219,17 @@ public class VideoPoker {
 
 	void reset_hand() {
 		for (int i=0; i<5; i++) {
-			Card card = this.player.remove_card(i);								// removes card from player hand
+			Card card = this.player.remove_card(0);								// removes card from player hand
 			this.played_cards.add_card(card);									// adds card to played card list
 		}
 	}
 
 	void reset_deck() {
-		for (Card card: this.played_cards.cards) {
+		ArrayList<Card> cards = this.played_cards.get_cards();
+		int num = cards.size();
+		for (int i=0; i<num; i++) {
+			Card card = this.played_cards.remove_card(0);				// removes card from played card list
 			this.deck.add_card(card);											// adds card back to deck
-			this.played_cards.remove_card();									// removes card from played card list
 		}
 		this.deck.shuffle();
 	}
@@ -257,7 +281,7 @@ public class VideoPoker {
 
 	boolean check_SF(Deck hand) {
 		ArrayList<Card> cards = hand.get_cards();
-		String suit = cards.get(0).get_suit();
+		Character suit = cards.get(0).get_suit();
 		int first = cards.get(0).get_rank();
 		int last = first;
 		int score = 0;
@@ -283,7 +307,7 @@ public class VideoPoker {
 
 	boolean check_RF(Deck hand) {
 		ArrayList<Card> cards = hand.get_cards();
-		String suit = cards.get(0).get_suit();
+		Character suit = cards.get(0).get_suit();
 		int score = 0;
 
 		for (Card card: cards) {
@@ -298,7 +322,7 @@ public class VideoPoker {
 				score ++;
 			if (card.get_rank() == 13)
 				score ++;
-			if (card.get_rank() == 14)
+			if (card.get_rank() == 1)
 				score ++;
 		}
 
