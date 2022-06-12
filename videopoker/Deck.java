@@ -8,10 +8,6 @@ import java.io.FileNotFoundException;
 
 public class Deck {
 
-
-    public static final int[] Ranks= {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-	public static final char[] Suits= {'C', 'D', 'H', 'S'};
-
     private ArrayList<Card> deck;
 
 
@@ -113,13 +109,7 @@ public class Deck {
 
                     deck.add(new Card(rank, suit));
                 }
-
             }
         }
-
-
     }
-
-
-
 }
