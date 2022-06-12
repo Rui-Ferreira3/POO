@@ -1,18 +1,28 @@
 package videopoker;
 
 public class Card {
-    private String rank;
-    private String suit;
-    public Card(String rank, String suit) {
-        this.rank=rank;
-        this.suit=suit;
-    }
+	
+	public static final String[] Ranks= {null, null, "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+	public static final String[] Suits= {"C", "D", "H", "S"};
 
-    protected String get_rank(){
-        return this.rank;
-    }
+	private int rank;
+	private int suit;
+	
+	
+	//Constructor
+	public Card(int rank, int suit) {
+		this.rank = rank;
+		this.suit = suit;
+	}
 
-    protected String get_suit(){
-        return this.suit;
-    }
+	//Getters
+	public String getRank() {
+		return Ranks[rank];
+	}
+
+	public String getSuit() {
+		return Suits[suit];
+	}
+	
+
 }
