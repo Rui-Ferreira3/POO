@@ -9,6 +9,9 @@ import java.io.FileNotFoundException;
 public class Deck {
 
 
+    public static final int[] Ranks= {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+	public static final char[] Suits= {'C', 'D', 'H', 'S'};
+
     private ArrayList<Card> deck;
 
 
@@ -53,7 +56,7 @@ public class Deck {
     public void create_deck(){
 
         for (int suit = 0; suit <= 3; suit++) {
-            for (int rank = 2; rank <= 13; rank++) {
+            for (int rank = 0; rank < 14; rank++) {
                 deck.add(new Card(rank, suit));
             }
         }
@@ -64,8 +67,7 @@ public class Deck {
 
         File file= new File("/Users/ricar/eclipse-workspace/Projeto/card-file.txt");
         try (Scanner scan = new Scanner(file)) {
-            int rank=1;
-            char suit='C';
+            int rank=1, suit=1;
 
             String aux= scan.nextLine();
             String[] cartas = aux.split(" ");
@@ -76,16 +78,23 @@ public class Deck {
 
                 if(aux.length() == 2){
 
-                    for(int j=0; j < 15; j++){
+                    for(int j=0; j < 9; j++){
                         if(Character.getNumericValue(aux.charAt(0)) == Ranks[j]){
-                            rank= Ranks[j];
+                            rank= j;
                             break;
                         }
                     }
 
+                    switch(aux.charAt(0)){
+                        case 'J' : rank= 10;
+                        case 'Q' : rank= 11;
+                        case 'K' : rank= 12;
+                        case 'A' : rank= 0;
+                    }
+
                     for(int a=0; a < 4; a++){
                         if(aux.charAt(1) == Suits[a]){
-                            suit= Suits[a];
+                            suit= a;
                             break;
                         }
                     }
@@ -93,11 +102,11 @@ public class Deck {
                     deck.add(new Card(rank, suit));
                 }
                 else{
-                    rank= 10;
+                    suit=9;
 
                     for(int a=0; a < 4; a++){
                         if(aux.charAt(1) == Suits[a]){
-                            suit= Suits[a];
+                            suit= a;
                             break;
                         }
                     }
