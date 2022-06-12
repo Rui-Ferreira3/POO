@@ -39,11 +39,11 @@ public class Debug extends VideoPoker {
         this.comand_List.add("e");
     }
 
-    protected String get_command() {
+    String get_command() {
         return this.comand_List.get(this.comand_idx++);
     }
 
-    private void reset_deck() {
+    void reset_deck() {
 		for (Card card: this.played_cards.cards) {
 			this.played_cards.remove_card();									// removes card from played card list
 		}

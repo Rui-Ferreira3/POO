@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class VideoPoker {
-	private int played;
-	private int wins;
-	private int last_bet;
-	private char last_command;
-	private Deck played_cards;
-	
-	private HashMap<String, Integer> statistics;
+	protected int played;
+	protected int wins;
+	protected int last_bet;
+	protected char last_command;
+	protected Deck played_cards;
 
-	private Deck deck;
-	private Player player;
-	private final int num_rounds;
+	protected HashMap<String, Integer> statistics;
 
-	private DoubleBonus variation;
+	protected Deck deck;
+	protected Player player;
+	protected final int num_rounds;
+
+	protected DoubleBonus variation;
 
 	public VideoPoker(Deck deck, Player player, int num) {
 		super();
@@ -82,7 +82,7 @@ public class VideoPoker {
 		} while (!(command.equals("e")));
 	}
 
-	private String get_command() {
+	String get_command() {
 		String command = new String();
 		System.out.println("What's next command?");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -94,7 +94,7 @@ public class VideoPoker {
 		return command;
 	}
 
-	private void bet(String command) {
+	void bet(String command) {
 		if (this.last_command == 'b' || this.last_command == 'd') {
 			System.out.println("b: illegal command");
 			return;
@@ -122,11 +122,11 @@ public class VideoPoker {
 		}
 	}
 
-	private void credit() {
+	void credit() {
 		System.out.println("Available credits: " + this.player.get_credit());
 	}
 
-	private void deal() {
+	void deal() {
 		if (this.last_command != 'b') {
 			System.out.println("d: illegal command");
 			return;
@@ -138,7 +138,7 @@ public class VideoPoker {
 		}
 	}
 
-	private void hold(String command) {
+	void hold(String command) {
 		if (this.last_command != 'd') {
 			System.out.println("d: illegal command");
 			return;
@@ -162,18 +162,18 @@ public class VideoPoker {
 		System.out.println("New hand: " + this.player.hand_to_String());
 	}
 
-	private void advice() {
+	void advice() {
 		String action = this.variation.get_optimal(this.player.get_hand());
 		System.out.println(action);
 	}
 
-	private void statistics() {
+	void statistics() {
 		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
 			System.out.println(map.getKey() + ":\t" + map.getValue(););
 		}
 	}
 
-	private void set_statistics() {
+	void set_statistics() {
 		this.statistics.put("JOB", 0);
 		this.statistics.put("TP", 0);
 		this.statistics.put("ToaK", 0);
@@ -187,7 +187,7 @@ public class VideoPoker {
 		this.statistics.put("total", 0);
 	}
 
-	private void update_statistics(String win) {
+	void update_statistics(String win) {
 		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
 			if (win.equals(map.getKey())) {
 				map.setValue(map.getValue()+1);
@@ -195,14 +195,14 @@ public class VideoPoker {
 		}
 	}
 
-	private void reset_hand() {
+	void reset_hand() {
 		for (int i=0; i<5; i++) {
 			Card card = this.player.remove_card(i);								// removes card from player hand
 			this.played_cards.add_card(card);									// adds card to played card list
 		}
 	}
 
-	private void reset_deck() {
+	void reset_deck() {
 		for (Card card: this.played_cards.cards) {
 			this.deck.add_card(card);											// adds card back to deck
 			this.played_cards.remove_card();									// removes card from played card list
@@ -210,7 +210,7 @@ public class VideoPoker {
 		this.deck.shuffle();
 	}
 
-	protected String check_win(Deck hand) {
+	String check_win(Deck hand) {
 		if (check_JOB(hand))
 			return "JOB";
 		else if (check_TP(hand))
@@ -231,31 +231,31 @@ public class VideoPoker {
 			return "other";
 	}
 
-	private boolean check_JOB(Deck hand) {
+	boolean check_JOB(Deck hand) {
 		return false;
 	}
 
-	private boolean check_TP(Deck hand) {
+	boolean check_TP(Deck hand) {
 		return false;
 	}
 
-	private boolean check_ToaK(Deck hand) {
+	boolean check_ToaK(Deck hand) {
 		return false;
 	}
 
-	private boolean check_S(Deck hand) {
+	boolean check_S(Deck hand) {
 		return false;
 	}
 
-	private boolean check_F(Deck hand) {
+	boolean check_F(Deck hand) {
 		return false;
 	}
 
-	private boolean check_FoaK(Deck hand) {
+	boolean check_FoaK(Deck hand) {
 		return false;
 	}
 
-	private boolean check_SF(Deck hand) {
+	boolean check_SF(Deck hand) {
 		ArrayList<Card> cards = hand.get_cards();
 		String suit = cards.get(0).get_suit();
 		int first = cards.get(0).get_rank();
@@ -281,7 +281,7 @@ public class VideoPoker {
 			return false;
 	}
 
-	private boolean check_RF(Deck hand) {
+	boolean check_RF(Deck hand) {
 		ArrayList<Card> cards = hand.get_cards();
 		String suit = cards.get(0).get_suit();
 		int score = 0;
