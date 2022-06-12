@@ -42,7 +42,7 @@ public class Player {
         }
         return hand_String;
     }
-    protected Deck get_Hand(){
+    protected Deck get_hand(){
         return hand;
     }
 }
