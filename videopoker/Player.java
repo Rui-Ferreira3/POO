@@ -1,11 +1,4 @@
 package videopoker;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class Player {
     private final int initial_credit;
@@ -81,4 +74,5 @@ public class Player {
         }
         return hand_copy;
     }
+
 }

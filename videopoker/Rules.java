@@ -145,10 +145,67 @@ public class Rules {
             return false;
     }
 
+    boolean check_SF(Deck hand) {
+        if(this.check_S(hand) && this.check_F(hand))
+            return true;
+        else
+            return false;
+    }
+
+    boolean check_RF(Deck hand) {
+        if(this.check_S(hand) && this.check_F(hand) &&  hand.get_cards().get(0).get_rank() == 13 && hand.get_cards().get(4).get_rank() == 1)
+            return true;
+        else
+            return false;
+    }
+
     protected String get_optimal(Deck hand) {
 		String optimal = new String();
 
 		return optimal;
 	}
+
+    int value_1(Deck hand) {
+        if (check_RF(hand))
+            return 1;
+        else if (check_SF(hand))
+            return 1;
+        else if (check_FoaK(hand))
+            return 1;
+        else
+            return 50;
+    }
+
+    int value_2(Deck hand) {
+        return 50;
+    }
+
+    int value_3(Deck hand) {
+        if (check_ToaK(hand) && hand.get_cards().get(4).get_rank() == '1')
+            return 3;
+        else
+            return 50;
+    }
+
+    int value_4(Deck hand) {
+        if (check_S(hand))
+            return 4;
+        else if (check_F(hand))
+            return 4;
+        else if (check_FH(hand))
+            return 4;
+        else
+            return 50;
+    }
+
+    int value_5(Deck hand) {
+        if (check_ToaK(hand) && hand.get_cards().get(4).get_rank() != '1')
+            return 5;
+        else
+            return 50;
+    }
+
     
+
+
 }

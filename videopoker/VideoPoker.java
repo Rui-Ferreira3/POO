@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VideoPoker {
 	protected int played;
@@ -265,10 +263,10 @@ public class VideoPoker {
 	}
 
 	String check_win(Deck hand, int bet) {
-		if (this.rules.check_S(hand) && this.rules.check_F(hand) &&  hand.get_cards().get(0).get_rank() == 13 && hand.get_cards().get(4).get_rank() == 1) {
+		if (this.rules.check_RF(hand)) {
 			this.variation.credit_player(this.player, hand, bet, "RF");
 			return "RF";
-		} else if (this.rules.check_S(hand) && this.rules.check_F(hand)) {
+		} else if (this.rules.check_SF(hand)) {
 			this.variation.credit_player(this.player, hand, bet, "SF");
 			return "SF";
 		} else if (this.rules.check_FoaK(hand)) {
