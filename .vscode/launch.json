@@ -6,18 +6,13 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "main.Main",
             "projectName": "POO-projeto_300bb47e",
-            // "args": "-d 100 cmd-file.txt card-file.txt"
-            "args": "-s 100 5 4"
+            "args": "-s 100 5 4",
+            "console": "internalConsole"
+
         }
     ]
 }

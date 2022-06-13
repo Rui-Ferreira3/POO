@@ -9,7 +9,7 @@ import videopoker.Deck;
 import videopoker.Player;
 import videopoker.VideoPoker;
 
-public class Main {
+public class Main {  
     public static void main(String[] args) {
         int credit=0, bet=0, nbdeals=0;
 		String comand_file = new String();
