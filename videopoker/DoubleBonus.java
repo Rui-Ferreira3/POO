@@ -7,7 +7,7 @@ public class DoubleBonus {
 	public DoubleBonus() {
 		super();
 	}
-
+	
 	protected String get_optimal(Deck hand) {
 		String optimal = new String();
 
