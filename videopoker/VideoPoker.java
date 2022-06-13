@@ -69,7 +69,7 @@ public class VideoPoker {
 			if (c == 'h' && this.last_command == 'd') {
 				Deck ordered_hand = this.player.get_hand();
 				ordered_hand.order_deck();
-				String win = this.check_win(ordered_hand);
+				String win = this.check_win(ordered_hand, this.last_bet);
 				if (win.equals("other")) {
 					System.out.println("player loses and his credit is " + this.player.get_credit());
 				} else {
@@ -191,14 +191,12 @@ public class VideoPoker {
 		}
 		String action = this.variation.get_optimal(this.player.get_hand());
 		System.out.println(action);
-		this.last_command = 'a';
 	}
 
 	void statistics() {
 		for (Map.Entry<String, Integer> map:this.statistics.entrySet()) {
 			System.out.println(map.getKey() + ":\t" + map.getValue());
 		}
-		this.last_command = 's';
 	}
 
 	void set_statistics() {
@@ -239,37 +237,135 @@ public class VideoPoker {
 		this.deck.shuffle();
 	}
 
-	String check_win(Deck hand) {
-		if (check_S(hand) && check_F(hand) &&  hand.get_cards().get(4).get_rank() == 13 && hand.get_cards().get(0).get_rank() == 1)
+	String check_win(Deck hand, int bet) {
+		int earnings;
+		if (check_S(hand) && check_F(hand) &&  hand.get_cards().get(0).get_rank() == 13 && hand.get_cards().get(4).get_rank() == 1) {
+			if (bet == 5)
+				earnings = 4000;
+			else
+				earnings = 250 * bet;
+			this.player.add_credit(earnings);
 			return "RF";
-		else if (check_S(hand) && check_F(hand))
+		} else if (check_S(hand) && check_F(hand)) {
+			earnings = 50 * bet;
+			this.player.add_credit(earnings);
 			return "SF";
-		else if (check_FoaK(hand))
+		} else if (check_FoaK(hand)) {
+			if (hand.get_cards().get(1).get_rank() == 1)
+				earnings = 160 * bet;
+			else if (hand.get_cards().get(1).get_rank() <= 4)
+				earnings = 80 * bet;
+			else
+				earnings = 50 * bet;
+			this.player.add_credit(earnings);
 			return "FoaK";
-		else if (check_S(hand))
+		} else if (check_FH(hand)) {
+			earnings = 10 * bet;
+			this.player.add_credit(earnings);
+			return "FH";
+		} else if (check_S(hand)) {
+			earnings = 7 * bet;
+			this.player.add_credit(earnings);
 			return "S";
-		else if (check_F(hand))
+		} else if (check_F(hand)) {
+			earnings = 5 * bet;
+			this.player.add_credit(earnings);
 			return "F";
-		else if (check_ToaK(hand))
+		} else if (check_ToaK(hand)) {
+			earnings = 3 * bet;
+			this.player.add_credit(earnings);
 			return "ToaK";
-		else if (3 == 1)
+		} else if (check_TP(hand)) {
+			earnings = bet;
+			this.player.add_credit(earnings);
 			return "TP";
-		else if (2 == 1)
+		} else if (check_JOB(hand)) {
+			earnings = bet;
+			this.player.add_credit(earnings);
 			return "JOB";
-		else
+		} else
 			return "other";
 	}
 
 	boolean check_JOB(Deck hand) {
-		return false;
+		ArrayList<Card> cards = hand.get_cards();
+
+		if (cards.get(0).get_rank() == cards.get(1).get_rank() &&					// P P X Y Z
+			cards.get(1).get_rank() != cards.get(2).get_rank() &&
+			cards.get(2).get_rank() != cards.get(3).get_rank() &&
+			cards.get(3).get_rank() != cards.get(4).get_rank() &&
+			(cards.get(0).get_rank() >= 11 || cards.get(0).get_rank() == 1))
+			return true;
+		else if (cards.get(0).get_rank() != cards.get(1).get_rank() &&			// X P P Y Z
+			cards.get(1).get_rank() == cards.get(2).get_rank() &&	
+			cards.get(2).get_rank() != cards.get(3).get_rank() &&
+			cards.get(3).get_rank() != cards.get(4).get_rank() &&
+			(cards.get(1).get_rank() >= 11 || cards.get(1).get_rank() == 1))
+			return true;
+		else if (cards.get(0).get_rank() != cards.get(1).get_rank() &&			// X Y P P Z
+			cards.get(2).get_rank() != cards.get(2).get_rank() &&
+			cards.get(2).get_rank() == cards.get(3).get_rank() &&
+			cards.get(3).get_rank() != cards.get(4).get_rank() &&
+			(cards.get(2).get_rank() >= 11 || cards.get(2).get_rank() == 1))
+			return true;
+		else if (cards.get(0).get_rank() != cards.get(1).get_rank() &&			// X Y Z P P
+			cards.get(1).get_rank() != cards.get(2).get_rank() &&
+			cards.get(2).get_rank() != cards.get(3).get_rank() &&
+			cards.get(3).get_rank() == cards.get(4).get_rank() &&
+			(cards.get(3).get_rank() >= 11 || cards.get(3).get_rank() == 1))
+				return true;
+		else
+			return false;
 	}
 
 	boolean check_TP(Deck hand) {
-		return false;
+		ArrayList<Card> cards = hand.get_cards();
+
+		if (cards.get(0).get_rank() == cards.get(1).get_rank() &&					// P1 P1 P2 P2 X
+			cards.get(0).get_rank() != cards.get(2).get_rank() &&
+			cards.get(2).get_rank() == cards.get(3).get_rank() &&
+			cards.get(2).get_rank() != cards.get(4).get_rank() &&
+			cards.get(0).get_rank() != cards.get(4).get_rank())
+			return true;
+		else if (cards.get(0).get_rank() != cards.get(1).get_rank() &&			// X P1 P1 P2 P2
+			cards.get(1).get_rank() == cards.get(2).get_rank() &&	
+			cards.get(1).get_rank() != cards.get(3).get_rank() &&
+			cards.get(3).get_rank() == cards.get(4).get_rank() &&
+			cards.get(3).get_rank() != cards.get(0).get_rank())
+			return true;
+		else if (cards.get(0).get_rank() == cards.get(1).get_rank() &&			// P1 P1 X P2 P2
+			cards.get(0).get_rank() != cards.get(2).get_rank() &&
+			cards.get(2).get_rank() != cards.get(3).get_rank() &&
+			cards.get(3).get_rank() == cards.get(4).get_rank() &&
+			cards.get(3).get_rank() != cards.get(2).get_rank())
+			return true;
+		else
+			return false;
 	}
 
 	boolean check_ToaK(Deck hand) {
-		return false;
+		ArrayList<Card> cards = hand.get_cards();
+
+		if (cards.get(0).get_rank() == cards.get(1).get_rank() &&					// T T T X Y
+			cards.get(0).get_rank() == cards.get(2).get_rank() &&
+			cards.get(0).get_rank() != cards.get(3).get_rank() &&
+			cards.get(0).get_rank() != cards.get(4).get_rank() &&
+			cards.get(3).get_rank() != cards.get(4).get_rank())
+			return true;
+		else if (cards.get(1).get_rank() == cards.get(2).get_rank() &&			// X T T T Y
+			cards.get(1).get_rank() == cards.get(3).get_rank() &&
+			cards.get(1).get_rank() != cards.get(0).get_rank() &&
+			cards.get(1).get_rank() != cards.get(4).get_rank() &&
+			cards.get(0).get_rank() != cards.get(4).get_rank())
+			return true;
+		else if (cards.get(2).get_rank() == cards.get(3).get_rank() &&			// X Y T T T
+			cards.get(2).get_rank() == cards.get(4).get_rank() &&
+			cards.get(2).get_rank() != cards.get(0).get_rank() &&
+			cards.get(2).get_rank() != cards.get(1).get_rank() &&
+			cards.get(0).get_rank() != cards.get(1).get_rank())
+			return true;
+		else
+			return false;
 	}
 
 	boolean check_S(Deck hand) {
@@ -281,7 +377,7 @@ public class VideoPoker {
 				return true;
 
 		for (int i=3; i>=0; i--) {
-			if (cards.get(i).get_rank() == low_rank-1)	
+			if (cards.get(i).get_rank() == low_rank+1)	
 				low_rank++;
 			else
 				return false;
@@ -302,11 +398,34 @@ public class VideoPoker {
 		return true;
 	}
 
+	boolean check_FH(Deck hand) {
+		ArrayList<Card> cards = hand.get_cards();
+
+		if (cards.get(0).get_rank() == cards.get(1).get_rank() &&					// T T T P P
+			cards.get(2).get_rank() == cards.get(3).get_rank() &&
+			cards.get(2).get_rank() == cards.get(4).get_rank())
+			return true;
+		else if (cards.get(0).get_rank() == cards.get(1).get_rank() &&			// P P T T T
+			cards.get(0).get_rank() == cards.get(2).get_rank() &&
+			cards.get(3).get_rank() == cards.get(4).get_rank())
+			return true;
+		else
+			return false;
+	}
+
 	boolean check_FoaK(Deck hand) {
 		ArrayList<Card> cards = hand.get_cards();
 
-		
-		return false;
+		if (cards.get(0).get_rank() == cards.get(1).get_rank() &&					// 4 4 4 4 X
+			cards.get(0).get_rank() == cards.get(2).get_rank() &&
+			cards.get(0).get_rank() == cards.get(3).get_rank())
+			return true;
+		else if (cards.get(1).get_rank() == cards.get(2).get_rank() &&			// X 4 4 4 4
+			cards.get(1).get_rank() == cards.get(3).get_rank() &&
+			cards.get(1).get_rank() == cards.get(4).get_rank())
+			return true;
+		else
+			return false;
 	}
 
 }
