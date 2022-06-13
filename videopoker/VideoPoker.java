@@ -190,7 +190,7 @@ public class VideoPoker {
 			System.out.println("a: illegal command");
 			return;
 		}
-		String action = this.variation.get_optimal(this.player.get_hand());
+		String action = this.rules.get_optimal(this.player.get_hand());
 		System.out.println(action);
 	}
 
@@ -265,50 +265,32 @@ public class VideoPoker {
 	}
 
 	String check_win(Deck hand, int bet) {
-		int earnings;
 		if (this.rules.check_S(hand) && this.rules.check_F(hand) &&  hand.get_cards().get(0).get_rank() == 13 && hand.get_cards().get(4).get_rank() == 1) {
-			if (bet == 5)
-				earnings = 4000;
-			else
-				earnings = 250 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "RF");
 			return "RF";
 		} else if (this.rules.check_S(hand) && this.rules.check_F(hand)) {
-			earnings = 50 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "SF");
 			return "SF";
 		} else if (this.rules.check_FoaK(hand)) {
-			if (hand.get_cards().get(1).get_rank() == 1)
-				earnings = 160 * bet;
-			else if (hand.get_cards().get(1).get_rank() <= 4)
-				earnings = 80 * bet;
-			else
-				earnings = 50 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "FoaK");
 			return "FoaK";
 		} else if (this.rules.check_FH(hand)) {
-			earnings = 10 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "FH");
 			return "FH";
 		} else if (this.rules.check_S(hand)) {
-			earnings = 7 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "S");
 			return "S";
 		} else if (this.rules.check_F(hand)) {
-			earnings = 5 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "F");
 			return "F";
 		} else if (this.rules.check_ToaK(hand)) {
-			earnings = 3 * bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "ToaK");
 			return "ToaK";
 		} else if (this.rules.check_TP(hand)) {
-			earnings = bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "TP");
 			return "TP";
 		} else if (this.rules.check_JOB(hand)) {
-			earnings = bet;
-			this.player.add_credit(earnings);
+			this.variation.credit_player(this.player, hand, bet, "JOB");
 			return "JOB";
 		} else
 			return "other";

@@ -144,4 +144,11 @@ public class Rules {
         else
             return false;
     }
+
+    protected String get_optimal(Deck hand) {
+		String optimal = new String();
+
+		return optimal;
+	}
+    
 }
