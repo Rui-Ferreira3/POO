@@ -8,12 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 public class Player {
+    private final int initial_credit;
     private int credit;
     private Deck hand;
 
     public Player(int credit) {
         this.credit = credit;
+        this.initial_credit = credit;
         this.hand = new Deck();
+    }
+
+    int get_credit() {
+        return this.credit;
+    }
+
+    int get_initial_credit() {
+        return this.initial_credit;
     }
 
     boolean sub_credit(int bet) {
@@ -39,10 +49,6 @@ public class Player {
 
     Card replace_card(int i, Card card) {
         return this.hand.put_card(i, card);
-    }
-
-    int get_credit() {
-        return this.credit;
     }
 
     String hand_to_String() {

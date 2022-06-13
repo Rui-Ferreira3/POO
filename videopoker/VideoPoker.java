@@ -196,6 +196,7 @@ public class VideoPoker {
 
 	void statistics() {
 		String space;
+		System.out.println("Hand\t\t\t|\tNb");
 		for (Statistic stat: this.statistics) {
 			if (stat.get_stat().length() < 7)
 				space = ":\t\t\t";
@@ -205,7 +206,10 @@ public class VideoPoker {
 				space = ":\t";
 			System.out.println(stat.get_stat() + space + "|\t" + stat.get_value());
 		}
-
+		System.out.println("Hand\t\t\t|\t" + this.played);
+		float percent_float = ((float)this.player.get_credit() / (float)this.player.get_initial_credit()) * 100;
+		int percent_int = (int) percent_float;
+		System.out.println("Credit\t\t\t|     " + this.player.get_credit() + " (" + percent_int + "%)");
 	}
 
 	void set_statistics() {
