@@ -37,7 +37,6 @@ public class Deck {
 		Collections.shuffle(deck);
 	}
 
-
     public void create_deck() {
         for (int suit = 0; suit < 4; suit++)
             for (int rank = 0; rank < 13; rank++)
@@ -91,4 +90,5 @@ public class Deck {
             e.printStackTrace();
         }
     }
+
 }

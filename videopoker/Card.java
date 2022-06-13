@@ -17,8 +17,16 @@ public class Card {
 		return ranks[rank];
 	}
 
+	int get_rank_idx() {
+		return this.rank;
+	}
+
 	Character get_suit() {
 		return suits[suit];
+	}
+
+	int get_suit_idx() {
+		return this.suit;
 	}
 	
 

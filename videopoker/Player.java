@@ -68,8 +68,11 @@ public class Player {
     }
 
     protected Deck get_hand(){
-        Deck copy = new Deck();
-        copy = this.hand;
-        return copy;
+        Deck hand_copy = new Deck();
+        for (Card card: this.hand.get_cards()) {
+            Card card_copy = new Card(card.get_rank_idx(), card.get_suit_idx());
+            hand_copy.add_card(card_copy);
+        }
+        return hand_copy;
     }
 }
