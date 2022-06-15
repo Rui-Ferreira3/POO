@@ -159,53 +159,308 @@ public class Rules {
             return false;
     }
 
-    protected String get_optimal(Deck hand) {
-		String optimal = new String();
+    ArrayList<Card> get_optimal(Deck hand) {
+        ArrayList<Card> keepers;
+        keepers = isRFSFFoaK(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is4toRF(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is3A(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = isSFFH(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = isToaK(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is4toSF(hand);
+        if (keepers != null)
+            return keepers;                 
+        keepers = isTP(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = isHP(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is4toF(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is3toRF(hand);
+        if (keepers != null)
+            return keepers;
 
-		return optimal;
+        
+        keepers = isJT(hand, true);
+        if (keepers != null)
+            return keepers;
+        keepers = isQJ(hand, false);
+        if (keepers != null)
+            return keepers;
+        keepers = isQT(hand, true);
+        if (keepers != null)
+            return keepers;
+
+
+        return null;
 	}
 
-    int value_1(Deck hand) {
-        if (check_RF(hand))
-            return 1;
-        else if (check_SF(hand))
-            return 1;
-        else if (check_FoaK(hand))
-            return 1;
+    ArrayList<Card> isRFSFFoaK(Deck hand) {
+        if (this.check_RF(hand))
+            return hand.get_cards();
+        else if (this.check_SF(hand))
+            return hand.get_cards();
+        else if (this.check_FoaK(hand))
+            return hand.get_cards();
         else
-            return 50;
+            return null;
     }
 
-    int value_2(Deck hand) {
-        return 50;
+    ArrayList<Card> is4toRF(Deck hand) {
+
+        return null;
     }
 
-    int value_3(Deck hand) {
-        if (check_ToaK(hand) && hand.get_cards().get(4).get_rank() == '1')
-            return 3;
+    ArrayList<Card> is3A(Deck hand) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        if (cards.get(0).get_rank() == cards.get(1).get_rank() &&
+            cards.get(0).get_rank() == cards.get(2).get_rank() &&
+            cards.get(0).get_rank() != cards.get(3).get_rank()) {
+                keepers.add(cards.get(0));
+                keepers.add(cards.get(1));
+                keepers.add(cards.get(2));
+                return keepers;
+            } 
         else
-            return 50;
+            return null;
     }
 
-    int value_4(Deck hand) {
+    ArrayList<Card> isSFFH(Deck hand) {
         if (check_S(hand))
-            return 4;
+            return hand.get_cards();
         else if (check_F(hand))
-            return 4;
+            return hand.get_cards();
         else if (check_FH(hand))
-            return 4;
+            return hand.get_cards();
         else
-            return 50;
+            return null;
     }
 
-    int value_5(Deck hand) {
+    ArrayList<Card> isToaK(Deck hand) {
         if (check_ToaK(hand) && hand.get_cards().get(4).get_rank() != '1')
-            return 5;
+            return hand.get_cards();
         else
-            return 50;
+            return null;
+    }
+
+    ArrayList<Card> is4toSF(Deck hand) {
+
+        return null;
+    }
+
+    ArrayList<Card> isTP(Deck hand) {
+        if (check_TP(hand))
+            return hand.get_cards();
+        else
+            return null;
+    }
+
+    ArrayList<Card> isHP(Deck hand) {
+        if (check_JOB(hand))
+            return hand.get_cards();
+        else
+            return null;
+    }
+
+    ArrayList<Card> is4toF(Deck hand) {
+
+        return null;
+    }
+
+    ArrayList<Card> is3toRF(Deck hand) {
+
+        return null;
+    }
+
+
+
+
+    ArrayList<Card> isJT(Deck hand, boolean suited) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        Card jack=null, ten=null;
+
+        for (Card card: cards) {
+            if (card.get_rank() == 11)
+                jack = card;
+            if (card.get_rank() == 10)
+                ten = card;
+        }
+        if (jack!=null && ten!=null) {
+            keepers.add(jack);
+            keepers.add(ten);
+            if (suited) {
+                if (jack.get_suit() == ten.get_suit()) {
+                    return keepers;
+                }
+            } else
+                return keepers;
+        }
+        
+        return null;
+    }
+
+    ArrayList<Card> isQJ(Deck hand, boolean suited) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        Card queen=null, jack=null;
+
+        for (Card card: cards) {
+            if (card.get_rank() == 12)
+                queen = card;
+            if (card.get_rank() == 11)
+                jack = card;
+        }
+        if (queen!=null && jack!=null) {
+            keepers.add(queen);
+            keepers.add(jack);
+            if (suited) {
+                if (queen.get_suit() == jack.get_suit()) {
+                    return keepers;
+                }
+            } else
+                return keepers;
+        }
+        
+        return null;
+    }
+
+    ArrayList<Card> is3toFwithHC(Deck hand) {
+
+        return null;
+    }
+
+    ArrayList<Card> isQT(Deck hand, boolean suited) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        Card queen=null, ten=null;
+
+        for (Card card: cards) {
+            if (card.get_rank() == 12)
+                queen = card;
+            if (card.get_rank() == 10)
+                ten = card;
+        }
+        if (queen!=null && ten!=null) {
+            keepers.add(queen);
+            keepers.add(ten);
+            if (suited) {
+                if (queen.get_suit() == ten.get_suit()) {
+                    return keepers;
+                }
+            } else
+                return keepers;
+        }
+        
+        return null;
+    }
+
+    ArrayList<Card> is3toSF3(Deck hand) {
+
+        return null;
+    }
+
+    ArrayList<Card> isKQorKJ(Deck hand){
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        Card king=null, queen=null, jack=null;
+
+        for (Card card: cards) {
+            if (card.get_rank() == 13)
+                king = card;
+            if (card.get_rank() == 12)
+                queen = card;
+            if (card.get_rank() == 11)
+                jack = card;
+        }
+        if (king!=null) {
+            keepers.add(king);
+            if (queen!=null) {
+                keepers.add(queen);
+                return keepers;
+            }
+            if (jack!=null) {
+                keepers.add(jack);
+                return keepers;
+            }
+        }
+
+        return null;
+    }
+
+    ArrayList<Card> isA(Deck hand){
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        if (hand.get_cards().get(4).get_rank() == 1) {
+            keepers.add(hand.get_cards().get(4));
+            return keepers;
+        }
+
+        return null;
+    }
+
+    ArrayList<Card> isKT(Deck hand, boolean suited) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        Card king=null, ten=null;
+
+        for (Card card: cards) {
+            if (card.get_rank() == 13)
+                king = card;
+            if (card.get_rank() == 10)
+                ten = card;
+        }
+        if (king!=null && ten!=null) {
+            keepers.add(king);
+            keepers.add(ten);
+            if (suited) {
+                if (king.get_suit() == ten.get_suit()) {
+                    return keepers;
+                }
+            } else
+                return keepers;
+        }
+        
+        return null;
+    }
+
+    ArrayList<Card> isJorQorK(Deck hand){
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+
+        for (Card card: cards) {
+            if (card.get_rank() == 13) {
+                keepers.add(card);
+                return keepers;
+            } else if (card.get_rank() == 12) {
+                keepers.add(card);
+                return keepers;
+            } else if (card.get_rank() == 11) {
+                keepers.add(card);
+                return keepers;
+            }
+        }
+
+        return null;
     }
 
     
-
 
 }

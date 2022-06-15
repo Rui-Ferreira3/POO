@@ -188,8 +188,10 @@ public class VideoPoker {
 			System.out.println("a: illegal command");
 			return;
 		}
-		String action = this.rules.get_optimal(this.player.get_hand());
-		System.out.println(action);
+		Deck ordered_hand = this.player.get_hand();
+		ordered_hand.order_deck();
+		ArrayList<Card> keepers = this.rules.get_optimal(ordered_hand);
+		// System.out.println(action);
 	}
 
 	void statistics() {
