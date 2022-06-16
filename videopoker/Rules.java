@@ -967,10 +967,8 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
-                    high_cards++;
-                }
                 if (high_rank-card.get_rank() == 1) {
                     keepers.add(card);
                     high_rank--;
