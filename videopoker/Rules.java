@@ -475,29 +475,16 @@ public class Rules {
     ArrayList<Card> isLP(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-
-        if (cards.get(0).get_rank() == cards.get(1).get_rank() &&		            // P1 P1 X X X 
-        cards.get(0).get_rank() < 10) {
-            keepers.add(cards.get(0));
-            keepers.add(cards.get(1));
-            return keepers;
-        } else if (cards.get(1).get_rank() == cards.get(2).get_rank() &&			// X P1 P1 X X
-        cards.get(1).get_rank() < 10) {
-            keepers.add(cards.get(1));
-            keepers.add(cards.get(2));
-            return keepers;
-        } else if (cards.get(2).get_rank() == cards.get(3).get_rank() &&			// X X P1 P1 X
-        cards.get(2).get_rank() < 10) {
-            keepers.add(cards.get(3));
-            keepers.add(cards.get(4));
-            return keepers;
-        } else if (cards.get(3).get_rank() == cards.get(4).get_rank() &&			// X X X P1 P1
-        cards.get(3).get_rank() < 10) {
-            keepers.add(cards.get(1));
-            keepers.add(cards.get(2));
-            return keepers;
-        }else
-            return null;
+        for (int i=0; i<4; i++) {
+            if (cards.get(i).get_rank() == cards.get(i+1).get_rank()) {
+                if (i == 3 || cards.get(i).get_rank() != cards.get(i+2).get_rank()){
+                    keepers.add(cards.get(i));
+                    keepers.add(cards.get(i+1));
+                    return keepers;
+                }
+            }
+        }
+        return null;
     }
 
     ArrayList<Card> isAKQJ(Deck hand) {
