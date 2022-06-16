@@ -510,26 +510,33 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             gaps = 0;
+            high_cards = 0;
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
-                    high_cards++;
-                }
-                if (card.get_rank() == 2 && high_cards > 0) {
-                    high_cards = 0;
-                }
-                if (high_rank-card.get_rank() == 3) {
-                    gaps += 2;
-                    keepers.add(card);
-                    high_rank -= 3;
-                } else if (high_rank-card.get_rank() == 2) {
-                    gaps += 1;
-                    keepers.add(card);
-                    high_rank -= 2;
-                } else {
-                    if (high_rank-card.get_rank() == 1) {
+                if (cards.get(i).get_suit() == card.get_suit()) {
+                    if (card.get_rank()>10){
+                        high_cards++;
+                    }
+                    if (card.get_rank()==1) {
+                        if (high_rank >= 10) {
+                            keepers.add(card);
+                            high_cards++;
+                        }
+                    }
+                    if (high_rank-card.get_rank() == 3) {
+                        gaps += 2;
                         keepers.add(card);
-                        high_rank--;
+                        high_rank -= 3;
+                    } else if (high_rank-card.get_rank() == 2) {
+                        gaps += 1;
+                        keepers.add(card);
+                        high_rank -= 2;
+                    } else {
+                        if (high_rank-card.get_rank() == 1) {
+                            keepers.add(card);
+                            high_rank--;
+                        }
                     }
                 }
             }
@@ -546,10 +553,18 @@ public class Rules {
         int high_cards = 0, flag = 0;
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
+            high_cards = 0;
+            flag = 0;
             keepers.clear();
+            keepers.add(cards.get(i));
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
+                if (card.get_rank()>10)
                     high_cards++;
+                if (card.get_rank()==1) {
+                    if (high_rank >= 10) {
+                        keepers.add(card);
+                        high_cards++;
+                    }
                 }
                 if (high_rank-card.get_rank() == 1) {
                     keepers.add(card);
@@ -559,9 +574,9 @@ public class Rules {
                     high_rank -= 2;
                     flag = 1;
                 }
-            }
-            if (keepers.size() == 4 && high_cards==3) {
-                return keepers;
+                if (keepers.size() == 4 && high_cards==3) {
+                    return keepers;
+                }
             }
         }
         return null;
