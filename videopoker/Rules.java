@@ -535,12 +535,6 @@ public class Rules {
                 }
             }
             if (keepers.size() == 3 && high_cards >= gaps) {
-                Character suit = keepers.get(0).get_suit();
-                for (Card card: keepers) {
-                    if (!suit.equals(card.get_suit())) {
-                        return null;
-                    }
-                }
                 return keepers;
             }
         }
