@@ -637,6 +637,7 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             for(Card card: cards) {
                 if (card.get_rank()>10 || card.get_rank()==1){
                     high_cards++;
@@ -664,33 +665,30 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             gaps = 0;
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
-                    high_cards++;
-                }
-                if (high_rank-card.get_rank() == 3) {
-                    gaps += 2;
-                    keepers.add(card);
-                    high_rank -= 3;
-                } else if (high_rank-card.get_rank() == 2) {
-                    gaps += 1;
-                    keepers.add(card);
-                    high_rank -= 2;
-                } else {
-                    if (high_rank-card.get_rank() == 1) {
+                if (cards.get(i).get_suit()==card.get_suit()){
+                    if (card.get_rank()>10 || card.get_rank()==1){
+                        high_cards++;
+                    }
+                    if (high_rank-card.get_rank() == 3) {
+                        gaps += 2;
                         keepers.add(card);
-                        high_rank--;
+                        high_rank -= 3;
+                    } else if (high_rank-card.get_rank() == 2) {
+                        gaps += 1;
+                        keepers.add(card);
+                        high_rank -= 2;
+                    } else {
+                        if (high_rank-card.get_rank() == 1) {
+                            keepers.add(card);
+                            high_rank--;
+                        }
                     }
                 }
             }
             if (keepers.size() == 3 && (gaps==1 || (gaps==2 && high_cards==1))) {
-                Character suit = keepers.get(0).get_suit();
-                for (Card card: keepers) {
-                    if (!suit.equals(card.get_suit())) {
-                        return null;
-                    }
-                }
                 return keepers;
             }
         }
@@ -704,6 +702,7 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             for(Card card: cards) {
                 if (card.get_rank()>10 || card.get_rank()==1){
                     high_cards++;
