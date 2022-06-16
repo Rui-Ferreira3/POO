@@ -540,8 +540,13 @@ public class Rules {
                     }
                 }
             }
+
             if (keepers.size() == 3 && high_cards >= gaps) {
-                return keepers;
+                if (keepers.get(0).get_rank()==4 & keepers.get(1).get_rank()==3 && keepers.get(2).get_rank()==2){
+                    return null;
+                }else{
+                    return keepers;
+                }
             }
         }
         return null;
