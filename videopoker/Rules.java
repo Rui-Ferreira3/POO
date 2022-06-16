@@ -277,20 +277,31 @@ public class Rules {
     ArrayList<Card> is4toRF(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-
+        int flag1 = 0, flag2 = 0, flag3 = 0, flag4 = 0, flag5 = 0;
         for (int i=0; i<4; i++) {
+            keepers.clear();
             for(Card card: cards) {
                 if (card.get_suit_idx()==i) {
-                    if (card.get_rank() == 1)
+                    if (card.get_rank() == 1 && flag1 == 0) {
                         keepers.add(card);
-                    if (card.get_rank() == 13)
+                        flag1 = 1;
+                    }
+                    if (card.get_rank() == 13 && flag2 == 0) {
                         keepers.add(card);
-                    if (card.get_rank() == 12)
+                        flag2 = 1;
+                    }
+                    if (card.get_rank() == 12 && flag3 == 0) {
                         keepers.add(card);
-                    if (card.get_rank() == 11)
+                        flag3 = 1;
+                    }
+                    if (card.get_rank() == 11 && flag4 == 0) {
                         keepers.add(card);
-                    if (card.get_rank() == 10)
+                        flag4 = 1;
+                    }
+                    if (card.get_rank() == 10 && flag5 == 0) {
                         keepers.add(card);
+                        flag5 = 1;
+                    }
                 }
             }
             if (keepers.size() == 4){
@@ -354,9 +365,10 @@ public class Rules {
                 Character suit = keepers.get(0).get_suit();
                 for (Card card: keepers) {
                     if (!suit.equals(card.get_suit())) {
-                        return keepers;
+                        return null;
                     }
                 }
+                return keepers;
             }
         }
         return null;
@@ -388,6 +400,7 @@ public class Rules {
                 if (i == 3 || cards.get(i).get_rank() != cards.get(i+2).get_rank()){
                     keepers.add(cards.get(i));
                     keepers.add(cards.get(i+1));
+                    return keepers;
                 }
             }
         }
@@ -445,6 +458,7 @@ public class Rules {
         for (int i=0; i<2; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            keepers.add(cards.get(i));
             for(Card card: cards) {
                 if (high_rank-card.get_rank() == 1) {
                     high_rank--;
