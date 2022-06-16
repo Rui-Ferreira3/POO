@@ -233,7 +233,7 @@ public class Rules {
         keepers = isQJ(hand, false);
         if (keepers != null)
             return keepers;
-        keepers = is3toF_HC(hand);
+        keepers = is3toF_1HC(hand);
         if (keepers != null)
             return keepers;
         keepers = isQT(hand, true);
@@ -254,9 +254,12 @@ public class Rules {
         keepers = isJorQorK(hand);
         if (keepers != null)
             return keepers;
-        
-
-
+        keepers = is4toInsideS_0HC(hand);
+        if (keepers != null)
+            return keepers;
+        keepers = is3toF_0HC(hand);
+        if (keepers != null)
+            return keepers;
         return null;
 	}
 
@@ -275,24 +278,23 @@ public class Rules {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
 
-        for(Card card: cards) {
-            if (card.get_rank() == 1)
-                keepers.add(card);
-            if (card.get_rank() == 13)
-                keepers.add(card);
-            if (card.get_rank() == 12)
-                keepers.add(card);
-            if (card.get_rank() == 11)
-                keepers.add(card);
-            if (card.get_rank() == 10)
-                keepers.add(card);
-        }
-        if (keepers.size() == 4){
-            Character suit = keepers.get(0).get_suit();
-            for (Card card: keepers) {
-                if (!suit.equals(card.get_suit())) {
-                    return keepers;
+        for (int i=0; i<4; i++) {
+            for(Card card: cards) {
+                if (card.get_suit_idx()==i) {
+                    if (card.get_rank() == 1)
+                        keepers.add(card);
+                    if (card.get_rank() == 13)
+                        keepers.add(card);
+                    if (card.get_rank() == 12)
+                        keepers.add(card);
+                    if (card.get_rank() == 11)
+                        keepers.add(card);
+                    if (card.get_rank() == 10)
+                        keepers.add(card);
                 }
+            }
+            if (keepers.size() == 4){
+                return keepers;
             }
         }
         return null;
@@ -301,16 +303,14 @@ public class Rules {
     ArrayList<Card> is3A(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-        if (cards.get(0).get_rank() == cards.get(1).get_rank() &&
-            cards.get(0).get_rank() == cards.get(2).get_rank() &&
-            cards.get(0).get_rank() != cards.get(3).get_rank()) {
-                keepers.add(cards.get(0));
-                keepers.add(cards.get(1));
-                keepers.add(cards.get(2));
-                return keepers;
-            } 
-        else
-            return null;
+        for (Card card: cards) {
+            if (card.get_rank() == 1) {
+                keepers.add(card);
+            }
+        }
+        if (keepers.size() == 3)
+            return keepers;
+        return null;
     }
 
     ArrayList<Card> isSFFH(Deck hand) {
@@ -331,7 +331,7 @@ public class Rules {
             return null;
     }
 
-    ArrayList<Card> is4toSF(Deck hand) {                        // 2 3 4 6 10
+    ArrayList<Card> is4toSF(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
         for (int i=0; i<2; i++) {
@@ -363,17 +363,35 @@ public class Rules {
     }
 
     ArrayList<Card> isTP(Deck hand) {
-        if (check_TP(hand))
-            return hand.get_cards();
-        else
-            return null;
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        int pairs = 0;
+        for (int i=0; i<4; i++) {
+            if (cards.get(i).get_rank() == cards.get(i+1).get_rank()) {
+                if (i == 3 || cards.get(i).get_rank() != cards.get(i+2).get_rank()){
+                    keepers.add(cards.get(i));
+                    keepers.add(cards.get(i+1));
+                    pairs++;
+                }
+            }
+        }
+        if (pairs == 2)
+            return keepers;
+        return null;
     }
 
     ArrayList<Card> isHP(Deck hand) {
-        if (check_JOB(hand))
-            return hand.get_cards();
-        else
-            return null;
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        for (int i=0; i<4; i++) {
+            if (cards.get(i).get_rank() == cards.get(i+1).get_rank() && (cards.get(i).get_rank()>=11 || cards.get(i).get_rank()==1)) {
+                if (i == 3 || cards.get(i).get_rank() != cards.get(i+2).get_rank()){
+                    keepers.add(cards.get(i));
+                    keepers.add(cards.get(i+1));
+                }
+            }
+        }
+        return null;
     }
 
     ArrayList<Card> is4toF(Deck hand) {
@@ -440,7 +458,7 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> isLP(Deck hand) {                                                                  //LOW PAIR
+    ArrayList<Card> isLP(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
 
@@ -486,79 +504,69 @@ public class Rules {
     ArrayList<Card> is3toSF1(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-        int i, j;
-        int high_cards = 0, straight = 0;
-
-        for (Card card: cards) {
-            if (card.get_rank() > 10 || card.get_rank() == 1){
-                high_cards++;
-            }
-        }
-        if (high_cards < 2)
-            return null;
-
-        for(i = 0; i < 3; i++){
-            for(j = i+1; j < i+3; j++){
-                if (cards.get(i).get_rank() == cards.get(j).get_rank())
-                    straight++;
-                else{
-                    straight = 0;
-                    break;
+        int high_cards = 0, gaps = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            gaps = 0;
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
                 }
-            }
-            if (straight ==2)
-                break;
-        }
-
-        high_cards = 0;
-        if(straight == 2){
-            if (cards.get(i).get_suit() == cards.get(i-1).get_suit() && cards.get(i).get_suit() == cards.get(i-2).get_suit()){
-                for (int k=i; k > i-3; k--) {
-                    if (cards.get(i).get_rank() > 10 || cards.get(i).get_rank() == 1){
-                        high_cards++;
+                if (card.get_rank() == 2 && high_cards > 0) {
+                    high_cards = 0;
+                }
+                if (high_rank-card.get_rank() == 3) {
+                    gaps += 2;
+                    keepers.add(card);
+                    high_rank -= 3;
+                } else if (high_rank-card.get_rank() == 2) {
+                    gaps += 1;
+                    keepers.add(card);
+                    high_rank -= 2;
+                } else {
+                    if (high_rank-card.get_rank() == 1) {
+                        keepers.add(card);
+                        high_rank--;
                     }
                 }
-                if(high_cards >= 2)
-                    keepers.add(cards.get(i));
-                    keepers.add(cards.get(i-1));
-                    keepers.add(cards.get(i-2));
-                    return keepers;
+            }
+            if (keepers.size() == 3 && high_cards >= gaps) {
+                Character suit = keepers.get(0).get_suit();
+                for (Card card: keepers) {
+                    if (!suit.equals(card.get_suit())) {
+                        return null;
+                    }
+                }
+                return keepers;
             }
         }
-
         return null;
     }
 
-    ArrayList<Card> is4toInsideS_3HC(Deck hand) {// K J
+    ArrayList<Card> is4toInsideS_3HC(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-        int high_cards = 0, straight = 0;
-        boolean nine=false,ten=false,king=false,ace =false;
-
-        for (Card card:cards){
-            if(card.get_rank()>10 || card.get_rank()==1){
-                high_cards++;
+        int high_cards = 0, flag = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
+                }
+                if (high_rank-card.get_rank() == 1) {
+                    keepers.add(card);
+                    high_rank--;
+                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                    keepers.add(card);
+                    high_rank -= 2;
+                    flag = 1;
+                }
             }
-            if(card.get_rank()==9){
-                nine=true;
-                keepers.add(card);
-            }else if(card.get_rank()==10){
-                ten=true;
-                keepers.add(card);
-            }else if(card.get_rank()==13){
-                king=true;
-                keepers.add(card);
-            }else if(card.get_rank()==1){
-                ace=true;
-                keepers.add(card);
+            if (keepers.size() == 4 && high_cards==3) {
+                return keepers;
             }
-        }   
-        if (high_cards<3){
-            return null;
-        }else if(nine & king & !ace & !ten){ //If you have the cards nine and ace its impossible to have straight
-            return keepers;
-        }else if(!(nine || king) & ace & ten){ //If you have a 
-            return keepers;
         }
         return null;
     }
@@ -611,36 +619,29 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> is4toInsideS_2HC(Deck hand) { // A K 9 8 7
+    ArrayList<Card> is4toInsideS_2HC(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-        int high_cards = 0;
-        boolean nine=false,ten=false,king=false,ace =false;
-
-        for (Card card:cards){
-            if(card.get_rank()>10 || card.get_rank()==1){
-                high_cards++;
+        int high_cards = 0, flag = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
+                }
+                if (high_rank-card.get_rank() == 1) {
+                    keepers.add(card);
+                    high_rank--;
+                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                    keepers.add(card);
+                    high_rank -= 2;
+                    flag = 1;
+                }
             }
-            if(card.get_rank()==9){
-                nine=true;
-                keepers.add(card);
-            }else if(card.get_rank()==10){
-                ten=true;
-                keepers.add(card);
-            }else if(card.get_rank()==13){
-                king=true;
-                keepers.add(card);
-            }else if(card.get_rank()==1){
-                ace=true;
-                keepers.add(card);
+            if (keepers.size() == 4 && high_cards==2) {
+                return keepers;
             }
-        }   
-        if (high_cards<2){
-            return null;
-        }else if(nine & king & !ace & !ten){
-            return keepers;
-        }else if(!(nine || king) & ace & ten){
-            return keepers;
         }
         return null;
     }
@@ -648,51 +649,67 @@ public class Rules {
     ArrayList<Card> is3toSF2(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-        int high_cards = 0, straight = 0;
-        int i, j, k;
-
-        for (i=4; i>=0; i--) {
-            if (cards.get(i).get_rank() > 10 || cards.get(i).get_rank() == 1){
-                high_cards++;
-            }
-        }
-        if (high_cards < 1)
-            return null;
-
-        for(i = 0; i < 3; i++){
-            for(j = i+1; j < i+3; j++){
-                if (cards.get(i).get_rank() == cards.get(j).get_rank())
-                    straight++;
-                else{
-                    straight = 0;
-                    break;
+        int high_cards = 0, gaps = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            gaps = 0;
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
                 }
-            }
-            if (straight ==2)
-                break;
-        }
-
-        high_cards = 0;
-        if(straight == 2){
-            if (cards.get(i).get_suit() == cards.get(i-1).get_suit() && cards.get(i).get_suit() == cards.get(i-2).get_suit()){
-                for (k=i; k > i-3; k--) {
-                    if (cards.get(i).get_rank() > 10 || cards.get(i).get_rank() == 1){
-                        high_cards++;
+                if (high_rank-card.get_rank() == 3) {
+                    gaps += 2;
+                    keepers.add(card);
+                    high_rank -= 3;
+                } else if (high_rank-card.get_rank() == 2) {
+                    gaps += 1;
+                    keepers.add(card);
+                    high_rank -= 2;
+                } else {
+                    if (high_rank-card.get_rank() == 1) {
+                        keepers.add(card);
+                        high_rank--;
                     }
                 }
-                if(high_cards == 1){
-                    keepers.add(cards.get(i));
-                    keepers.add(cards.get(i-1));
-                    keepers.add(cards.get(i-2));
-                    return keepers;   
+            }
+            if (keepers.size() == 3 && (gaps==1 || (gaps==2 && high_cards==1))) {
+                Character suit = keepers.get(0).get_suit();
+                for (Card card: keepers) {
+                    if (!suit.equals(card.get_suit())) {
+                        return null;
+                    }
                 }
+                return keepers;
             }
         }
         return null;
     }
 
     ArrayList<Card> is4toInsideS_1HC(Deck hand) {
-        
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        int high_cards = 0, flag = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
+                }
+                if (high_rank-card.get_rank() == 1) {
+                    keepers.add(card);
+                    high_rank--;
+                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                    keepers.add(card);
+                    high_rank -= 2;
+                    flag = 1;
+                }
+            }
+            if (keepers.size() == 4 && high_cards==1) {
+                return keepers;
+            }
+        }
         return null;
     }
 
@@ -761,8 +778,23 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> is3toF_HC(Deck hand) {
-
+    ArrayList<Card> is3toF_1HC(Deck hand) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        int high_cards;
+        for (int i=0; i<=3; i++) {
+            high_cards = 0;
+            for (Card card:cards){
+                if (card.get_suit_idx()==i){
+                    if (card.get_rank() >= 11 || card.get_rank() == 1)
+                        high_cards++;
+                    keepers.add(card);
+                }
+            }
+            if (keepers.size()==3 && high_cards==1)
+                return keepers;
+            keepers.clear();
+        }
         return null;
     }
 
@@ -792,7 +824,7 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> is3toSF3(Deck hand) {                                       // 2 3 X X 6
+    ArrayList<Card> is3toSF3(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
         int gaps;
@@ -805,6 +837,10 @@ public class Rules {
                     gaps += 2;
                     keepers.add(card);
                     high_rank -= 3;
+                } else if (high_rank-card.get_rank() == 2) {
+                    gaps += 1;
+                    keepers.add(card);
+                    high_rank -= 2;
                 } else {
                     if (high_rank-card.get_rank() == 1) {
                         keepers.add(card);
@@ -812,11 +848,20 @@ public class Rules {
                     }
                 }
             }
+            if (keepers.size() == 3 && gaps == 2) {
+                Character suit = keepers.get(0).get_suit();
+                for (Card card: keepers) {
+                    if (!suit.equals(card.get_suit())) {
+                        return null;
+                    }
+                }
+                return keepers;
+            }
         }
         return null;
     }
 
-    ArrayList<Card> isKQorKJ(Deck hand){
+    ArrayList<Card> isKQorKJ(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
 
@@ -845,7 +890,7 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> isA(Deck hand){
+    ArrayList<Card> isA(Deck hand) {
         ArrayList<Card> keepers = new ArrayList<Card>();
         if (hand.get_cards().get(4).get_rank() == 1) {
             keepers.add(hand.get_cards().get(4));
@@ -881,7 +926,7 @@ public class Rules {
         return null;
     }
 
-    ArrayList<Card> isJorQorK(Deck hand){
+    ArrayList<Card> isJorQorK(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
 
@@ -898,6 +943,50 @@ public class Rules {
             }
         }
 
+        return null;
+    }
+
+    ArrayList<Card> is4toInsideS_0HC(Deck hand) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        int high_cards = 0, flag = 0;
+        for (int i=0; i<3; i++) {
+            int high_rank = cards.get(i).get_rank();
+            keepers.clear();
+            for(Card card: cards) {
+                if (card.get_rank()>10 || card.get_rank()==1){
+                    high_cards++;
+                }
+                if (high_rank-card.get_rank() == 1) {
+                    keepers.add(card);
+                    high_rank--;
+                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                    keepers.add(card);
+                    high_rank -= 2;
+                    flag = 1;
+                }
+            }
+            if (keepers.size() == 4 && high_cards==0) {
+                return keepers;
+            }
+        }
+        return null;
+    }
+
+    ArrayList<Card> is3toF_0HC(Deck hand) {
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        for (int i=0; i<=3; i++) {
+            for (Card card:cards){
+                if (card.get_suit_idx()==i){
+                    if (card.get_rank() >= 11 || card.get_rank() == 1)
+                    keepers.add(card);
+                }
+            }
+            if (keepers.size()==3)
+                return keepers;
+            keepers.clear();
+        }
         return null;
     }
 

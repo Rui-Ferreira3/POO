@@ -191,7 +191,12 @@ public class VideoPoker {
 		Deck ordered_hand = this.player.get_hand();
 		ordered_hand.order_deck();
 		ArrayList<Card> keepers = this.rules.get_optimal(ordered_hand);
-		// System.out.println(action);
+		String text = new String();
+		for (Card card: keepers) {
+			text += String.valueOf(card.get_rank()) + Character.toString(card.get_suit());
+			text += " ";
+		}
+		System.out.println(text);
 	}
 
 	void statistics() {
