@@ -445,9 +445,10 @@ public class Rules {
             Character suit = keepers.get(0).get_suit();
             for (Card card: keepers) {
                 if (!suit.equals(card.get_suit())) {
-                    return keepers;
+                    return null;
                 }
             }
+            return keepers;
         }
         return null;
     }
