@@ -43,7 +43,7 @@ public class VideoPoker {
 		String command = new String();
 		do {
 			command = this.get_command();
-			System.out.println("Command: " + command);
+			// System.out.println("Command: " + command);
 
 			char c = command.charAt(0);
 			if (c == 'b')
@@ -73,11 +73,12 @@ public class VideoPoker {
 					System.out.println("player loses and his credit is " + this.player.get_credit());
 				} else {
 					System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
-					System.out.println(win);
+					// System.out.println(win);
 					this.wins++;
 				}
 
 				this.played++;
+				System.out.println();
 				this.update_statistics(win);
 				this.reset_hand();
 				this.reset_deck();
@@ -182,10 +183,14 @@ public class VideoPoker {
 			System.out.println("a: illegal command");
 			return;
 		}
+		String text = new String();
 		Deck ordered_hand = this.player.get_hand();
 		ordered_hand.order_deck();
 		ArrayList<Card> keepers = this.rules.get_optimal(ordered_hand);
-		String text = new String();
+		if (keepers == null) {
+			text = "";
+			return;
+		}
 		int i = 1;
 		for (Card hand_card: this.player.get_hand().get_cards()) {
 			for (Card keep_card: keepers) {
@@ -195,7 +200,7 @@ public class VideoPoker {
 			}
 			i++;
 		}
-		System.out.println(text);
+		System.out.println("advice: h" + text);
 		this.advice = text;
 	}
 
