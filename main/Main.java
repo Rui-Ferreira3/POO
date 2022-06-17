@@ -3,6 +3,7 @@ package main;
 import videopoker.Debug;
 import videopoker.Deck;
 import videopoker.Player;
+import videopoker.Simulation;
 import videopoker.VideoPoker;
 
 public class Main {
@@ -43,7 +44,7 @@ public class Main {
 			}
 			deck.create_deck();									// criar deck com 52 cartas
 			deck.shuffle();
-            game = new VideoPoker(deck, player, nbdeals);
+            game = new Simulation(deck, player, bet, nbdeals);
 			game.play();
 		}else {
 			System.out.println("Invalid mode!");

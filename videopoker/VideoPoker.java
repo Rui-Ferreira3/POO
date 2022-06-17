@@ -13,25 +13,25 @@ public class VideoPoker {
 	protected char last_command;
 	protected Deck played_cards;
 	protected List<Statistic> statistics;
+	protected String advice;
 
 	protected Deck deck;
 	protected Player player;
-	protected final int num_rounds;
 
 	protected DoubleBonus variation;
 	protected Rules rules;
 
-	public VideoPoker(Deck deck, Player player, int num) {
+	public VideoPoker(Deck deck, Player player) {
 		super();
 		this.deck = deck;
 		this.player = player;
-		this.num_rounds = num;
 
 		this.played = 0;
 		this.wins = 0;
 		this.last_bet = 5;
 		this.played_cards = new Deck();
 		this.statistics = new ArrayList<Statistic>();
+		this.advice = new String();
 
 		this.set_statistics();
 
@@ -82,12 +82,6 @@ public class VideoPoker {
 				this.reset_hand();
 				this.reset_deck();
 				this.last_command = 'h';
-			}
-
-			if (this.num_rounds != -1) {
-				if (this.played > this.num_rounds) {
-					break;
-				}
 			}
 
 		} while (!(command.equals("e")));
@@ -192,11 +186,17 @@ public class VideoPoker {
 		ordered_hand.order_deck();
 		ArrayList<Card> keepers = this.rules.get_optimal(ordered_hand);
 		String text = new String();
-		for (Card card: keepers) {
-			text += String.valueOf(card.get_rank()) + Character.toString(card.get_suit());
-			text += " ";
+		int i = 1;
+		for (Card hand_card: this.player.get_hand().get_cards()) {
+			for (Card keep_card: keepers) {
+				if (hand_card.get_rank() == keep_card.get_rank() && hand_card.get_suit() == keep_card.get_suit()) {
+					text += " " + String.valueOf(i);
+				}
+			}
+			i++;
 		}
 		System.out.println(text);
+		this.advice = text;
 	}
 
 	void statistics() {

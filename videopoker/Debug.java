@@ -11,7 +11,7 @@ public class Debug extends VideoPoker {
     private int comand_idx;
 
     public Debug(Deck deck, Player player, String comand_file) {
-        super(deck, player, -1);
+        super(deck, player);
 
         this.comand_idx = 0;
 
