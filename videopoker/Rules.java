@@ -336,10 +336,21 @@ public class Rules {
     }
 
     ArrayList<Card> isToaK(Deck hand) {
-        if (check_ToaK(hand) && hand.get_cards().get(4).get_rank() != '1')
-            return hand.get_cards();
-        else
-            return null;
+        ArrayList<Card> cards = hand.get_cards();
+        ArrayList<Card> keepers = new ArrayList<Card>();
+        for (int i=0; i<3; i++) {
+            int rank = cards.get(i).get_rank();
+            for (Card card: cards) {
+                if (card.get_rank() == rank) {
+                    keepers.add(card);
+                }
+            }
+            if (keepers.size() == 3)
+                return keepers;
+            else
+                keepers.clear();
+        }
+        return null;
     }
 
     ArrayList<Card> is4toSF(Deck hand) {
