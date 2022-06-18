@@ -280,6 +280,11 @@ public class Rules {
         int flag1 = 0, flag2 = 0, flag3 = 0, flag4 = 0, flag5 = 0;
         for (int i=0; i<4; i++) {
             keepers.clear();
+            flag1 = 0;
+            flag2 = 0;
+            flag3 = 0;
+            flag4 = 0;
+            flag5 = 0;
             for(Card card: cards) {
                 if (card.get_suit_idx()==i) {
                     if (card.get_rank() == 1 && flag1 == 0) {
@@ -439,27 +444,41 @@ public class Rules {
     ArrayList<Card> is3toRF(Deck hand) {
         ArrayList<Card> cards = hand.get_cards();
         ArrayList<Card> keepers = new ArrayList<Card>();
-
-        for(Card card: cards) {
-            if (card.get_rank() == 1)
-                keepers.add(card);
-            if (card.get_rank() == 13)
-                keepers.add(card);
-            if (card.get_rank() == 12)
-                keepers.add(card);
-            if (card.get_rank() == 11)
-                keepers.add(card);
-            if (card.get_rank() == 10)
-                keepers.add(card);
-        }
-        if (keepers.size() == 3){
-            Character suit = keepers.get(0).get_suit();
-            for (Card card: keepers) {
-                if (!suit.equals(card.get_suit())) {
-                    return null;
+        int flag1 = 0, flag2 = 0, flag3 = 0, flag4 = 0, flag5 = 0;
+        for (int i=0; i<4; i++) {
+            keepers.clear();
+            flag1 = 0;
+            flag2 = 0;
+            flag3 = 0;
+            flag4 = 0;
+            flag5 = 0;
+            for(Card card: cards) {
+                if (card.get_suit_idx()==i) {
+                    if (card.get_rank() == 1 && flag1 == 0) {
+                        keepers.add(card);
+                        flag1 = 1;
+                    }
+                    if (card.get_rank() == 13 && flag2 == 0) {
+                        keepers.add(card);
+                        flag2 = 1;
+                    }
+                    if (card.get_rank() == 12 && flag3 == 0) {
+                        keepers.add(card);
+                        flag3 = 1;
+                    }
+                    if (card.get_rank() == 11 && flag4 == 0) {
+                        keepers.add(card);
+                        flag4 = 1;
+                    }
+                    if (card.get_rank() == 10 && flag5 == 0) {
+                        keepers.add(card);
+                        flag5 = 1;
+                    }
                 }
             }
-            return keepers;
+            if (keepers.size() == 3){
+                return keepers;
+            }
         }
         return null;
     }
@@ -574,21 +593,23 @@ public class Rules {
             keepers.clear();
             keepers.add(cards.get(i));
             for(Card card: cards) {
-                if (card.get_rank()>10)
-                    high_cards++;
-                if (card.get_rank()==1) {
-                    if (high_rank >= 10) {
-                        keepers.add(card);
+                if (high_rank >= card.get_rank()) {
+                    if (card.get_rank()>10)
                         high_cards++;
+                    if (card.get_rank()==1) {
+                        if (high_rank >= 10) {
+                            keepers.add(card);
+                            high_cards++;
+                        }
                     }
-                }
-                if (high_rank-card.get_rank() == 1) {
-                    keepers.add(card);
-                    high_rank--;
-                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
-                    keepers.add(card);
-                    high_rank -= 2;
-                    flag = 1;
+                    if (high_rank-card.get_rank() == 1) {
+                        keepers.add(card);
+                        high_rank--;
+                    } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                        keepers.add(card);
+                        high_rank -= 2;
+                        flag = 1;
+                    }
                 }
                 if (keepers.size() == 4 && high_cards==3) {
                     return keepers;
@@ -653,18 +674,27 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            high_cards = 0;
+            flag = 0;
             keepers.add(cards.get(i));
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
-                    high_cards++;
-                }
-                if (high_rank-card.get_rank() == 1) {
-                    keepers.add(card);
-                    high_rank--;
-                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
-                    keepers.add(card);
-                    high_rank -= 2;
-                    flag = 1;
+                if (high_rank >= card.get_rank()) {
+                    if (card.get_rank()>10)
+                        high_cards++;
+                    if (card.get_rank()==1) {
+                        if (high_rank >= 10) {
+                            keepers.add(card);
+                            high_cards++;
+                        }
+                    }
+                    if (high_rank-card.get_rank() == 1) {
+                        keepers.add(card);
+                        high_rank--;
+                    } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                        keepers.add(card);
+                        high_rank -= 2;
+                        flag = 1;
+                    }
                 }
             }
             if (keepers.size() == 4 && high_cards==2) {
@@ -682,6 +712,8 @@ public class Rules {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
             keepers.add(cards.get(i));
+            gaps = 0;
+            high_cards = 0;
             gaps = 0;
             for(Card card: cards) {
                 if (cards.get(i).get_suit()==card.get_suit()){
@@ -718,18 +750,27 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            high_cards = 0;
+            flag = 0;
             keepers.add(cards.get(i));
             for(Card card: cards) {
-                if (card.get_rank()>10 || card.get_rank()==1){
-                    high_cards++;
-                }
-                if (high_rank-card.get_rank() == 1) {
-                    keepers.add(card);
-                    high_rank--;
-                } else if (high_rank-card.get_rank() == 2 && flag == 0) {
-                    keepers.add(card);
-                    high_rank -= 2;
-                    flag = 1;
+                if (high_rank >= card.get_rank()) {
+                    if (card.get_rank()>10)
+                        high_cards++;
+                    if (card.get_rank()==1) {
+                        if (high_rank >= 10) {
+                            keepers.add(card);
+                            high_cards++;
+                        }
+                    }
+                    if (high_rank-card.get_rank() == 1) {
+                        keepers.add(card);
+                        high_rank--;
+                    } else if (high_rank-card.get_rank() == 2 && flag == 0) {
+                        keepers.add(card);
+                        high_rank -= 2;
+                        flag = 1;
+                    }
                 }
             }
             if (keepers.size() == 4 && high_cards==1) {
@@ -976,6 +1017,8 @@ public class Rules {
         for (int i=0; i<3; i++) {
             int high_rank = cards.get(i).get_rank();
             keepers.clear();
+            high_cards = 0;
+            flag = 0;
             keepers.add(cards.get(i));
             for(Card card: cards) {
                 if (high_rank-card.get_rank() == 1) {
