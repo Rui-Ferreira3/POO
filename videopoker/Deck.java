@@ -15,16 +15,22 @@ public class Deck {
     public Deck(){
         this.deck= new ArrayList<Card>();
     }
-    
+    /**
+     * Adds a card to the deck
+     */
 	void add_card(Card card) {
 		this.deck.add(card);
 	}
 
+    /**
+     * Removes a card from the deck
+     */
 	Card remove_card(int index) {
         Card carta = deck.remove(index);
         return carta;
 	}
 
+    
     Card put_card(int i, Card card) {
         Card removed_card = this.deck.get(i);
         this.deck.set(i, card);
