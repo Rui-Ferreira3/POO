@@ -66,7 +66,7 @@ public class Player {
         return hand_String;
     }
 
-    protected Deck get_hand(){
+    Deck get_hand(){
         Deck hand_copy = new Deck();
         for (Card card: this.hand.get_cards()) {
             Card card_copy = new Card(card.get_rank_idx(), card.get_suit_idx());

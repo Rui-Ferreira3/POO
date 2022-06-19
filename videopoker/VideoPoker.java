@@ -161,7 +161,7 @@ public class VideoPoker {
 			if (i == index) {
 				try{
 					if (command_idx < command.length){
-						index = Integer.parseInt(String.valueOf(command[command_idx]));		// recebe indice da carta a remover
+						index = Integer.parseInt(String.valueOf(command[command_idx]));		// recebe indice da carta a manter
 						command_idx ++;
 					} else
 						index = 6;

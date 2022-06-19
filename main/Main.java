@@ -12,6 +12,9 @@ public class Main {
 		String comand_file = new String();
 		String card_file = new String();
 
+		if (args.length < 4)
+			System.out.println("insuficeient arguments");
+
 		try{
             credit = Integer.parseInt(args[1]);
         }
