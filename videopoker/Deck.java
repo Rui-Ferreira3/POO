@@ -10,7 +10,7 @@ public class Deck {
     private ArrayList<Card> deck;
     /**
      * Constructs the Deck.
-     * Creates ann empty deck
+     * Creates an empty list in deck class
      */
     public Deck(){
         this.deck= new ArrayList<Card>();
@@ -30,33 +30,49 @@ public class Deck {
         return carta;
 	}
 
-    
+    /**
+     * Places a card in list of cards in deck
+     */   
     Card put_card(int i, Card card) {
         Card removed_card = this.deck.get(i);
         this.deck.set(i, card);
         return removed_card;
     }
-
+    /**
+     * @return deck
+     */
     ArrayList<Card> get_cards() {
         return this.deck;
     }
 
+    /**
+     * Shuffles list of cards in deck with random order
+     */
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 
+    /**
+     * Fills the list of cards from deck
+     */
     public void create_deck() {
         for (int suit = 0; suit < 4; suit++)
             for (int rank = 0; rank < 13; rank++)
                 deck.add(new Card(rank, suit));
     }
 
+    /**
+     * Orders the cards in the list of cards from the highest to the lowest, the ace is the lowest
+     */
     void order_deck(){
         Collections.sort(this.deck, (d1, d2) -> {
             return d2.get_rank() - d1.get_rank();
         });
     }
 
+    /**
+     * Adds cards to the list of cards from input file
+     */   
     public void create_from_file(String card_file) {
         try {
             File file = new File(card_file);

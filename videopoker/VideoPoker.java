@@ -170,7 +170,7 @@ public class VideoPoker {
 					ex.printStackTrace();
 				}
 			}
-			if (i != index-1 && !(this instanceof Debug)) {
+			if (i != index-1) {
 				Card card = this.deck.remove_card(0);
 				Card removed_card = this.player.replace_card(i, card);
 				this.played_cards.add_card(removed_card);
