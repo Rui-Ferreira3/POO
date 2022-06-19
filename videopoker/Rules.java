@@ -161,24 +161,37 @@ public class Rules {
 
     ArrayList<Card> get_optimal(Deck hand) {
         ArrayList<Card> keepers;
+        System.out.print("Current hand: ");
         keepers = isRForSForFoaK(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("Royal Flush or Straight Flush or 4 of a kind");
             return keepers;
+        }
         keepers = is4toRF(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("Current hand: 4 to Royal Flush");
             return keepers;
+        }
         keepers = is3A(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("3 aces");
             return keepers;
+        }
         keepers = isSFFH(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("Straigth Flush or Flush or Full House");
             return keepers;
+        }
         keepers = isToaK(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("3 of a kind (no aces)");
             return keepers;
+        }
         keepers = is4toSF(hand);
-        if (keepers != null)
+        if (keepers != null){
+            System.out.println("4 to Straigt Flush");
             return keepers;                 
+        }
         keepers = isTP(hand);
         if (keepers != null)
             return keepers;

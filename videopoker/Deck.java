@@ -8,11 +8,14 @@ import java.util.Collections;
 
 public class Deck {
     private ArrayList<Card> deck;
-
+    /**
+     * Constructs the Deck.
+     * Creates ann empty deck
+     */
     public Deck(){
         this.deck= new ArrayList<Card>();
     }
-
+    
 	void add_card(Card card) {
 		this.deck.add(card);
 	}

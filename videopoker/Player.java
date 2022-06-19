@@ -47,7 +47,7 @@ public class Player {
     String hand_to_String() {
         String hand_String="";
         String aux_String;
-        //perceber como é que o rui faz a hash table para fazer o ciclo for a percorrer a mao e sacar as cartas a cada ciclo
+
         for(Card card:this.hand.get_cards()){
             if (card.get_rank() == 1)
                 aux_String = "A";

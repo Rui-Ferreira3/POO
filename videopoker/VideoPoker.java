@@ -43,7 +43,9 @@ public class VideoPoker {
 		String command = new String();
 		do {
 			command = this.get_command();
-			// System.out.println("Command: " + command);
+			if (this instanceof Debug){
+				System.out.println("Command: " + command);
+			}
 
 			char c = command.charAt(0);
 			if (c == 'b')
@@ -72,7 +74,7 @@ public class VideoPoker {
 				if (win.equals("other")) {
 					System.out.println("player loses and his credit is " + this.player.get_credit());
 				} else {
-					System.out.println("player wins with a " + this.player.hand_to_String() + " and his credit is " + this.player.get_credit());
+					System.out.println("player wins with a " + this.player.hand_to_String() + "and his credit is " + this.player.get_credit());
 					// System.out.println(win);
 					this.wins++;
 				}
@@ -168,7 +170,7 @@ public class VideoPoker {
 					ex.printStackTrace();
 				}
 			}
-			if (i != index-1) {
+			if (i != index-1 && !(this instanceof Debug)) {
 				Card card = this.deck.remove_card(0);
 				Card removed_card = this.player.replace_card(i, card);
 				this.played_cards.add_card(removed_card);
