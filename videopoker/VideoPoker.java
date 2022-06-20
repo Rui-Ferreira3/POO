@@ -61,9 +61,9 @@ public class VideoPoker {
 			else if (c == '$')
 				this.credit();
 			else if (c == 'd')
-				command = this.deal();
+				this.deal();
 			else if (c == 'h')
-				command = this.hold(command.split(" "));
+				this.hold(command.split(" "));
 			else if (c == 'a')
 				this.advice();
 			else if (c == 's')
@@ -154,9 +154,10 @@ public class VideoPoker {
 	 * No deal é feita a gestão das cartas associadas ao deal de cartas durante o jogo
 	 * @return
 	 */
-	String deal() {
+	void deal() {
 		if (this.last_command != 'b') {
 			System.out.println("d: illegal command");
+			return;
 		}
 		
 		for (int i=0; i<5; i++) {
@@ -165,19 +166,18 @@ public class VideoPoker {
 				this.player.add_card(card);
 			}else{
 				System.out.print("There are no more cards in the deck");
-				return "e";
+				System.exit(0);
 			}
 
 		}
 		System.out.println("hand:" + this.player.hand_to_String());
 		this.last_command = 'd';
-		return "d";
 	}
 
-	String hold(String[] command) {
+	void hold(String[] command) {
 		if (!(this.last_command == 'd' || this.last_command == 'a')) {
 			System.out.println("h: illegal command");
-			return "h";
+			return;
 		}
 
 		int index = 0;
@@ -202,12 +202,11 @@ public class VideoPoker {
 					this.played_cards.add_card(removed_card);
 				}else{
 					System.out.println("There are no more cards in the deck");
-					return "e";
+					System.exit(0);
 				}
 			}
 		}
 		System.out.println("new hand: " + this.player.hand_to_String());
-		return "h";
 	}
 
 	void advice() {
@@ -268,25 +267,34 @@ public class VideoPoker {
 	}
 
 	void update_statistics(String win) {
-		if (win.equals("JOB"))
+		if (win.equals("JOB")) {
 			this.statistics.get(0).add();
-		else if (win.equals("TP"))
+			System.out.println("hand:\t" + this.statistics.get(0).get_stat());
+		}else if (win.equals("TP")) {
 			this.statistics.get(1).add();
-		else if (win.equals("ToaK"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("ToaK")) {
 			this.statistics.get(2).add();
-		else if (win.equals("S"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("S")) {
 			this.statistics.get(3).add();
-		else if (win.equals("F"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("F")) {
 			this.statistics.get(4).add();
-		else if (win.equals("FH"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("FH")) {
 			this.statistics.get(5).add();
-		else if (win.equals("FoaK"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("FoaK")) {
 			this.statistics.get(6).add();
-		else if (win.equals("SF"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("SF")) {
 			this.statistics.get(7).add();
-		else if (win.equals("RF"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("RF")) {
 			this.statistics.get(8).add();
-		else if (win.equals("other"))
+			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+		} else if (win.equals("other"))
 			this.statistics.get(9).add();
 	}
 
