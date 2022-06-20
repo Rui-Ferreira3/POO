@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+ 
 public class VideoPoker {
 	protected int played;
 	protected int wins;
@@ -21,6 +21,12 @@ public class VideoPoker {
 	protected DoubleBonus variation;
 	protected Rules rules;
 
+	/**
+	 * Construtor do VideoPoker
+	 * @param deck
+	 * @param player
+	 * 
+	 */
 	public VideoPoker(Deck deck, Player player) {
 		super();
 		this.deck = deck;
@@ -38,7 +44,9 @@ public class VideoPoker {
 		this.variation = new DoubleBonus();
 		this.rules = new Rules();
 	}
-
+	/**
+	 * Onde os comando são analisados e suas ações associadas são iniciadas
+	 */
 	public void play() {
 		String command = new String();
 		do {
@@ -53,9 +61,9 @@ public class VideoPoker {
 			else if (c == '$')
 				this.credit();
 			else if (c == 'd')
-				this.deal();
+				command = this.deal();
 			else if (c == 'h')
-				this.hold(command.split(" "));
+				command = this.hold(command.split(" "));
 			else if (c == 'a')
 				this.advice();
 			else if (c == 's')
@@ -89,7 +97,10 @@ public class VideoPoker {
 
 		} while (!(command.equals("e")));
 	}
-
+	/**
+	 * Para jogo iterativo, é pedido o comando no terminal para o utilisador poder jogar
+	 * @return o comando dado pelo utilisador
+	 */
 	String get_command() {
 		String command = new String();
 		System.out.println("What's next command?");
@@ -101,7 +112,10 @@ public class VideoPoker {
 		}
 		return command;
 	}
-
+	/**
+	 * Verificação da aposta do jogador. Esta não pode ser realisada depois de um deal ou de um bet, não pode ser superior a 5 e não pode ser superior ao credito do jogador
+	 * @param command
+	 */
 	void bet(String[] command) {
 		if (this.last_command == 'b' || this.last_command == 'd') {
 			System.out.println("b: illegal command");
@@ -130,29 +144,40 @@ public class VideoPoker {
 			System.out.println("b: insuficient funds");
 		}
 	}
-
+	/**
+	 * Imprime os créditos do jogador
+	 */
 	void credit() {
 		System.out.println("Available credits: " + this.player.get_credit());
 	}
-
-	void deal() {
+	/**
+	 * No deal é feita a gestão das cartas associadas ao deal de cartas durante o jogo
+	 * @return
+	 */
+	String deal() {
 		if (this.last_command != 'b') {
 			System.out.println("d: illegal command");
-			return;
 		}
 		
 		for (int i=0; i<5; i++) {
-			Card card = this.deck.remove_card(0);
-			this.player.add_card(card);
+			if (deck.get_cards().size()!=0){
+				Card card = this.deck.remove_card(0);
+				this.player.add_card(card);
+			}else{
+				System.out.print("There are no more cards in the deck");
+				return "e";
+			}
+
 		}
 		System.out.println("hand:" + this.player.hand_to_String());
 		this.last_command = 'd';
+		return "d";
 	}
 
-	void hold(String[] command) {
+	String hold(String[] command) {
 		if (!(this.last_command == 'd' || this.last_command == 'a')) {
 			System.out.println("h: illegal command");
-			return;
+			return "h";
 		}
 
 		int index = 0;
@@ -171,13 +196,18 @@ public class VideoPoker {
 				}
 			}
 			if (i != index-1) {
-				Card card = this.deck.remove_card(0);
-				Card removed_card = this.player.replace_card(i, card);
-				this.played_cards.add_card(removed_card);
+				if (deck.get_cards().size()!=0){
+					Card card = this.deck.remove_card(0);
+					Card removed_card = this.player.replace_card(i, card);
+					this.played_cards.add_card(removed_card);
+				}else{
+					System.out.println("There are no more cards in the deck");
+					return "e";
+				}
 			}
 		}
-
 		System.out.println("new hand: " + this.player.hand_to_String());
+		return "h";
 	}
 
 	void advice() {
