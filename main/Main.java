@@ -13,14 +13,13 @@ public class Main {
 		String card_file = new String();
 
 		if (args.length < 4)
-			System.out.println("insuficeient arguments");
+			System.exit(0);
 
 		try{
             credit = Integer.parseInt(args[1]);
         }
         catch (NumberFormatException ex){
             ex.printStackTrace();
-			System.exit(0);
         }
 
 		Deck deck = new Deck();
@@ -30,14 +29,12 @@ public class Main {
 		String mode = new String();
 		mode = args[0];
 		if (mode.equals("-d")) {
-			System.out.println("Debug mode!");
 			comand_file = args[2];
 			card_file = args[3];
 			deck.create_from_file(card_file);					// criar deck a partir do card_file
 			game = new Debug(deck, player, comand_file);
 			game.play();
 		}else if (mode.equals("-s")) {
-			System.out.println("Simulation mode!");
 			try{
 				bet = Integer.parseInt(args[2]);
 				nbdeals = Integer.parseInt(args[3]);
@@ -50,7 +47,6 @@ public class Main {
             game = new Simulation(deck, player, bet, nbdeals);
 			game.play();
 		}else {
-			System.out.println("Invalid mode!");
 			System.exit(0);
 		}
     }

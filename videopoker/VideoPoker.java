@@ -56,22 +56,32 @@ public class VideoPoker {
 			}
 
 			char c = command.charAt(0);
-			if (c == 'b')
-				this.bet(command.split(" "));
-			else if (c == '$')
-				this.credit();
-			else if (c == 'd')
-				this.deal();
-			else if (c == 'h')
-				this.hold(command.split(" "));
-			else if (c == 'a')
-				this.advice();
-			else if (c == 's')
-				this.statistics();
-			else if (c == 'e')
-				break;
-			else {
-				System.out.println("Invalid command! Try again!");
+			switch (c) {
+				case 'b':
+					System.out.println("-cmd: " + command);
+					this.bet(command.split(" "));
+					break;
+				case '$':
+					System.out.println("-cmd: " + command);
+					this.credit();
+					break;
+				case 'd':
+					System.out.println("-cmd: " + command);
+					this.deal();
+					break;
+				case 'h':
+					System.out.println("-cmd: " + command);
+					this.hold(command.split(" "));
+					break;
+				case 'a':
+					System.out.println("-cmd: " + command);
+					this.advice();
+					break;
+				case's':
+					System.out.println("-cmd: " + command);
+					this.statistics();
+					break;
+				default:
 					System.exit(0);
 			}
 
@@ -79,22 +89,16 @@ public class VideoPoker {
 				Deck ordered_hand = this.player.get_hand();
 				ordered_hand.order_deck();
 				String win = this.check_win(ordered_hand, this.last_bet);
-				if (win.equals("other")) {
-					System.out.println("player loses and his credit is " + this.player.get_credit());
-				} else {
-					System.out.println("player wins with a " + this.player.hand_to_String() + "and his credit is " + this.player.get_credit());
-					// System.out.println(win);
-					this.wins++;
-				}
 
 				this.played++;
-				System.out.println();
 				this.update_statistics(win);
 				this.reset_hand();
 				this.reset_deck();
 				this.last_command = 'h';
+				System.out.println();
 			}
 
+		System.out.println();
 		} while (!(command.equals("e")));
 	}
 	/**
@@ -122,7 +126,7 @@ public class VideoPoker {
 			return;
 		}
 
-		int bet = this.last_bet;
+		Integer bet = this.last_bet;
 		if (command.length>1) {
 			try{
 				bet = Integer.parseInt(String.valueOf(command[1]));
@@ -140,15 +144,16 @@ public class VideoPoker {
 		if (this.player.sub_credit(bet)) {
 			this.last_bet = bet;
 			this.last_command = 'b';
+			System.out.println("player is betting " + bet.toString());
 		} else {
-			System.out.println("b: insuficient funds");
+			System.exit(0);
 		}
 	}
 	/**
 	 * Imprime os créditos do jogador
 	 */
 	void credit() {
-		System.out.println("Available credits: " + this.player.get_credit());
+		System.out.println("player's credits is " + this.player.get_credit());
 	}
 	/**
 	 * No deal é feita a gestão das cartas associadas ao deal de cartas durante o jogo
@@ -165,12 +170,11 @@ public class VideoPoker {
 				Card card = this.deck.remove_card(0);
 				this.player.add_card(card);
 			}else{
-				System.out.print("There are no more cards in the deck");
 				System.exit(0);
 			}
 
 		}
-		System.out.println("hand:" + this.player.hand_to_String());
+		System.out.println("player's hand:" + this.player.hand_to_String());
 		this.last_command = 'd';
 	}
 
@@ -201,12 +205,11 @@ public class VideoPoker {
 					Card removed_card = this.player.replace_card(i, card);
 					this.played_cards.add_card(removed_card);
 				}else{
-					System.out.println("There are no more cards in the deck");
 					System.exit(0);
 				}
 			}
 		}
-		System.out.println("new hand: " + this.player.hand_to_String());
+		System.out.println("player's hand: " + this.player.hand_to_String());
 	}
 
 	void advice() {
@@ -231,7 +234,7 @@ public class VideoPoker {
 			}
 			i++;
 		}
-		System.out.println("advice: h" + text);
+		System.out.println("player should hold cards" + text);
 		this.advice = text;
 	}
 
@@ -267,35 +270,43 @@ public class VideoPoker {
 	}
 
 	void update_statistics(String win) {
+		String text = new String();
 		if (win.equals("JOB")) {
 			this.statistics.get(0).add();
-			System.out.println("hand:\t" + this.statistics.get(0).get_stat());
+			text = this.statistics.get(0).get_stat();
 		}else if (win.equals("TP")) {
 			this.statistics.get(1).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text =  this.statistics.get(1).get_stat();
 		} else if (win.equals("ToaK")) {
 			this.statistics.get(2).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(2).get_stat();
 		} else if (win.equals("S")) {
 			this.statistics.get(3).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(3).get_stat();
 		} else if (win.equals("F")) {
 			this.statistics.get(4).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(4).get_stat();
 		} else if (win.equals("FH")) {
 			this.statistics.get(5).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(5).get_stat();
 		} else if (win.equals("FoaK")) {
 			this.statistics.get(6).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(6).get_stat();
 		} else if (win.equals("SF")) {
 			this.statistics.get(7).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(7).get_stat();
 		} else if (win.equals("RF")) {
 			this.statistics.get(8).add();
-			System.out.println("hand:\t" + this.statistics.get(1).get_stat());
+			text = this.statistics.get(8).get_stat();
 		} else if (win.equals("other"))
 			this.statistics.get(9).add();
+
+		if (win.equals("other")) {
+			System.out.println("player loses and his credit is " + this.player.get_credit());
+		} else {
+			System.out.println("player wins with a " + text.toUpperCase() + " and his credit is " + this.player.get_credit());
+			this.wins++;
+		}
 	}
 
 	void reset_hand() {
